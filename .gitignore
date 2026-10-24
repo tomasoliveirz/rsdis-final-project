@@ -1,0 +1,20 @@
+# colcon
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# python
+__pycache__/
+
+# latex
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.out
+report/*.synctex.gz
+
+# editor
+.vscode/
