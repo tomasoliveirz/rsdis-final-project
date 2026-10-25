@@ -32,6 +32,10 @@ The map in `maps/` is generated from the world with `scripts/make_map.py`.
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
 - `g22_hazard_interfaces`: our messages
+- `g22_hazard_mission`: our code (gas/radiation field model)
+
+The hidden sources are in `g22_hazard_mission/config/hazards.yaml`. Only the sensor
+simulation reads that file.
 
 ## Reused files
 
@@ -48,7 +52,7 @@ commits.
 | `config/nav2_ugv1.yaml`, `config/nav2_ugv2.yaml` | `nav2_multirobot_params_1.yaml`, `nav2_multirobot_params_2.yaml` | nav2_bringup 1.3.13 | Apache 2.0 |
 
 Paths above are inside `ros2_ws/src/g22_hazard_bringup/`. Everything in
-`g22_hazard_interfaces` is ours.
+`g22_hazard_interfaces` and `g22_hazard_mission` is ours.
 
 ## Moodle
 

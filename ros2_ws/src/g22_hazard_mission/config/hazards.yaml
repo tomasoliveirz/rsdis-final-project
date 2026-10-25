@@ -1,0 +1,27 @@
+# Where the hazards really are. Only the simulated sensors (and show_truth)
+# read this, the robots have to find them. Positions in the map frame.
+
+background:
+  gas_ppm: 0.5
+  radiation_usvh: 0.1
+
+noise: 0.05
+
+sources:
+  - name: gas_leak_1
+    type: gas
+    x: -3.5
+    y: 0.5
+    strength: 50.0
+
+  - name: radiation_1
+    type: radiation
+    x: 6.5
+    y: -3.0
+    strength: 20.0
+
+  - name: gas_leak_2
+    type: gas
+    x: 12.5
+    y: 5.5
+    strength: 40.0
