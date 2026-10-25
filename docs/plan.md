@@ -33,7 +33,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 - [x] gas and radiation sensors
 - [ ] UAV route and local search
 - [ ] coordinator
-- [ ] RViz markers
+- [x] RViz markers (zones and robots, detections still to do)
 - [ ] whole mission from one launch file
 - [ ] video
 - [ ] report

@@ -32,7 +32,8 @@ In a second terminal:
 ros2 launch g22_hazard_mission sensors.launch.py
 ```
 
-Starts the simulated gas/radiation sensor on each robot.
+Starts the simulated gas/radiation sensor on each robot, the hazard map and RViz. Add
+`show_truth:=true` to also draw the real sources.
 
 The map in `maps/` is generated from the world with `scripts/make_map.py`.
 
@@ -40,7 +41,7 @@ The map in `maps/` is generated from the world with `scripts/make_map.py`.
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
 - `g22_hazard_interfaces`: our messages
-- `g22_hazard_mission`: our nodes (`hazard_sensor`)
+- `g22_hazard_mission`: our nodes (`hazard_sensor`, `hazard_viz`)
 
 The hidden sources are in `g22_hazard_mission/config/hazards.yaml`. Only the sensor
 simulation reads that file.

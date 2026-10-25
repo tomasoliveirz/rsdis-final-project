@@ -1,9 +1,10 @@
-"""Sensors on the three robots. Run after sim.launch.py."""
+"""Sensors on the three robots, the hazard map and RViz. Run after sim.launch.py."""
 import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
@@ -11,6 +12,8 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_dir = get_package_share_directory('g22_hazard_mission')
     hazards_file = LaunchConfiguration('hazards_file')
+    show_truth = LaunchConfiguration('show_truth')
+    use_rviz = LaunchConfiguration('use_rviz')
 
     # name, where the position comes from, readings per second
     robots = [('uav1', 'odom', 5.0), ('ugv1', 'tf', 2.0), ('ugv2', 'tf', 2.0)]
@@ -34,10 +37,36 @@ def generate_launch_description():
         for name, source, rate in robots
     ]
 
+    viz = Node(
+        package='g22_hazard_mission',
+        executable='hazard_viz',
+        parameters=[{
+            'robots': [r[0] for r in robots],
+            'hazards_file': hazards_file,
+            'show_truth': show_truth,
+            'use_sim_time': True,
+        }],
+        output='screen',
+    )
+
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', os.path.join(pkg_dir, 'rviz', 'hazards.rviz')],
+        parameters=[{'use_sim_time': True}],
+        condition=IfCondition(use_rviz),
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'hazards_file',
             default_value=os.path.join(pkg_dir, 'config', 'hazards.yaml'),
             description='Hidden hazard sources'),
+        DeclareLaunchArgument(
+            'show_truth', default_value='false',
+            description='Also draw the real sources in RViz'),
+        DeclareLaunchArgument('use_rviz', default_value='true'),
         *sensors,
+        viz,
+        rviz,
     ])
