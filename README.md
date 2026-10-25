@@ -26,13 +26,21 @@ ros2 launch g22_hazard_bringup sim.launch.py
 Starts Gazebo with the UAV (`uav1`) and the two ground robots (`ugv1`, `ugv2`), each with
 its own Nav2. Add `headless:=True` to run without the Gazebo window.
 
+In a second terminal:
+
+```
+ros2 launch g22_hazard_mission sensors.launch.py
+```
+
+Starts the simulated gas/radiation sensor on each robot.
+
 The map in `maps/` is generated from the world with `scripts/make_map.py`.
 
 ## Packages
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
 - `g22_hazard_interfaces`: our messages
-- `g22_hazard_mission`: our code (gas/radiation field model)
+- `g22_hazard_mission`: our nodes (`hazard_sensor`)
 
 The hidden sources are in `g22_hazard_mission/config/hazards.yaml`. Only the sensor
 simulation reads that file.
