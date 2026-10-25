@@ -3,14 +3,14 @@
 Multi-robot simulation with ROS 2 and Gazebo for RSDIS (ISEP, 2026/27): one UAV and two
 ground robots in an industrial area with gas and radiation sources.
 
-Uses ROS 2 Jazzy and Gazebo Harmonic. The ground robots are a small version of the
+Uses ROS 2 Jazzy, Gazebo Harmonic and Nav2. The ground robots are a small version of the
 Gazebo tutorial robot and the UAV is the X3 quadcopter.
 The plan is in `docs/plan.md`.
 
 ## Build
 
 ```
-sudo apt install ros-jazzy-ros-gz
+sudo apt install ros-jazzy-ros-gz ros-jazzy-navigation2 ros-jazzy-nav2-bringup
 cd ros2_ws
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
@@ -23,14 +23,14 @@ source install/setup.bash
 ros2 launch g22_hazard_bringup sim.launch.py
 ```
 
-Starts Gazebo with the UAV (`uav1`) and the two ground robots (`ugv1`, `ugv2`). Add
-`headless:=True` to run without the Gazebo window.
+Starts Gazebo with the UAV (`uav1`) and the two ground robots (`ugv1`, `ugv2`), each with
+its own Nav2. Add `headless:=True` to run without the Gazebo window.
 
 The map in `maps/` is generated from the world with `scripts/make_map.py`.
 
 ## Packages
 
-- `g22_hazard_bringup`: world, robot models, map and the simulation launch
+- `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
 
 ## Reused files
 

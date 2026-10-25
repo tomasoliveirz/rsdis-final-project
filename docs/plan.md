@@ -29,7 +29,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 
 ## To do
 
-- [ ] world with the UAV and two ground robots running Nav2
+- [x] world with the UAV and two ground robots running Nav2
 - [ ] gas and radiation sensors
 - [ ] UAV route and local search
 - [ ] coordinator

@@ -14,7 +14,7 @@
 #
 # Changed by RSDIS Group 22 (2026) for our world, robots and UAV.
 
-"""Starts Gazebo with our world, the UAV and the two ground robots."""
+"""Starts Gazebo with our world, the UAV and the two ground robots, each with its own Nav2."""
 
 import os
 
@@ -26,18 +26,23 @@ from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
     GroupAction,
+    IncludeLaunchDescription,
     LogInfo,
 )
 from launch.conditions import UnlessCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    # Get the launch directory
+    bringup_dir = get_package_share_directory('nav2_bringup')
+    launch_dir = os.path.join(bringup_dir, 'launch')
     pkg_dir = get_package_share_directory('g22_hazard_bringup')
     ugv_xacro = os.path.join(pkg_dir, 'models', 'ugv', 'ugv.sdf.xacro')
 
-    # Spawn poses
+    # Spawn poses, AMCL starts from the same ones (initial_pose in nav2_ugvN.yaml)
     robots = [
         {'name': 'ugv1', 'x_pose': -11.0, 'y_pose': -7.8, 'yaw': 0.0},
         {'name': 'ugv2', 'x_pose': 12.0, 'y_pose': -9.0, 'yaw': 3.14159},
@@ -46,6 +51,10 @@ def generate_launch_description():
     # Simulation settings
     world = LaunchConfiguration('world')
     headless = LaunchConfiguration('headless')
+
+    # On this example all robots are launched with the same settings
+    map_yaml_file = LaunchConfiguration('map')
+    autostart = LaunchConfiguration('autostart')
 
     # Declare the launch arguments
     declare_world_cmd = DeclareLaunchArgument(
@@ -58,6 +67,27 @@ def generate_launch_description():
         'headless',
         default_value='False',
         description='Run Gazebo without its GUI',
+    )
+
+    declare_map_yaml_cmd = DeclareLaunchArgument(
+        'map',
+        default_value=os.path.join(pkg_dir, 'maps', 'hazard_zone.yaml'),
+        description='Full path to map file to load',
+    )
+
+    declare_robot_params_cmds = [
+        DeclareLaunchArgument(
+            f"{robot['name']}_params_file",
+            default_value=os.path.join(pkg_dir, 'config', f"nav2_{robot['name']}.yaml"),
+            description=f"Full path to the ROS2 parameters file for {robot['name']}",
+        )
+        for robot in robots
+    ]
+
+    declare_autostart_cmd = DeclareLaunchArgument(
+        'autostart',
+        default_value='true',
+        description='Automatically startup the stacks',
     )
 
     # Gazebo server, and the GUI unless headless
@@ -86,10 +116,11 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Define commands for launching the ground robots
+    # Define commands for launching the ground robots and their navigation
     nav_instances_cmds = []
     for robot in robots:
         name = robot['name']
+        params_file = LaunchConfiguration(f'{name}_params_file')
         tf_remaps = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
 
         group = GroupAction(
@@ -136,7 +167,23 @@ def generate_launch_description():
                                '--frame-id', 'base_link', '--child-frame-id', 'lidar_link'],
                     remappings=tf_remaps,
                 ),
-                LogInfo(msg=['Launching ', name]),
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        os.path.join(launch_dir, 'bringup_launch.py')
+                    ),
+                    launch_arguments={
+                        'namespace': name,
+                        'use_namespace': 'True',
+                        'slam': 'False',
+                        'map': map_yaml_file,
+                        'use_sim_time': 'True',
+                        'params_file': params_file,
+                        'autostart': autostart,
+                        'use_composition': 'True',
+                        'use_respawn': 'False',
+                    }.items(),
+                ),
+                LogInfo(msg=['Launching ', name, ' with ', params_file]),
             ]
         )
 
@@ -153,6 +200,10 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(declare_world_cmd)
     ld.add_action(declare_headless_cmd)
+    ld.add_action(declare_map_yaml_cmd)
+    for cmd in declare_robot_params_cmds:
+        ld.add_action(cmd)
+    ld.add_action(declare_autostart_cmd)
 
     # Add the actions to start gazebo, robots and simulations
     ld.add_action(start_gazebo_cmd)
