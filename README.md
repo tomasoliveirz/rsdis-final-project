@@ -31,6 +31,7 @@ The map in `maps/` is generated from the world with `scripts/make_map.py`.
 ## Packages
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
+- `g22_hazard_interfaces`: our messages
 
 ## Reused files
 
@@ -46,7 +47,8 @@ commits.
 | `launch/sim.launch.py` | `unique_multi_tb3_simulation_launch.py` | nav2_bringup 1.3.13 (Jazzy): https://github.com/ros-navigation/navigation2/tree/jazzy/nav2_bringup | Apache 2.0 |
 | `config/nav2_ugv1.yaml`, `config/nav2_ugv2.yaml` | `nav2_multirobot_params_1.yaml`, `nav2_multirobot_params_2.yaml` | nav2_bringup 1.3.13 | Apache 2.0 |
 
-Paths above are inside `ros2_ws/src/g22_hazard_bringup/`.
+Paths above are inside `ros2_ws/src/g22_hazard_bringup/`. Everything in
+`g22_hazard_interfaces` is ours.
 
 ## Moodle
 
