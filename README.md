@@ -26,9 +26,11 @@ ros2 launch g22_hazard_bringup sim.launch.py
 Starts Gazebo with the UAV (`uav1`) and the two ground robots (`ugv1`, `ugv2`). Add
 `headless:=True` to run without the Gazebo window.
 
+The map in `maps/` is generated from the world with `scripts/make_map.py`.
+
 ## Packages
 
-- `g22_hazard_bringup`: world, robot models and the simulation launch
+- `g22_hazard_bringup`: world, robot models, map and the simulation launch
 
 ## Reused files
 
