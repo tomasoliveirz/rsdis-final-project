@@ -1,18 +1,48 @@
 # RSDIS Final Project - Group 22
 
-Multi-robot simulation with ROS 2 and Gazebo for RSDIS (ISEP, 2026/27).
+Multi-robot simulation with ROS 2 and Gazebo for RSDIS (ISEP, 2026/27): one UAV and two
+ground robots in an industrial area with gas and radiation sources.
 
-## Base files
+Uses ROS 2 Jazzy and Gazebo Harmonic. The ground robots are a small version of the
+Gazebo tutorial robot and the UAV is the X3 quadcopter.
+The plan is in `docs/plan.md`.
 
-This commit only has the files we start from, exactly as they were downloaded.
+## Build
 
-| File | Source | Licence |
-|---|---|---|
-| `worlds/sensor_tutorial.sdf` | Gazebo Harmonic, Sensors tutorial: https://gazebosim.org/docs/harmonic/sensors/ (https://github.com/gazebosim/docs, `harmonic/tutorials/sensors/`) | CC BY 4.0 |
-| `worlds/multicopter_velocity_control.sdf` | gz-sim 8 example worlds: https://github.com/gazebosim/gz-sim/tree/gz-sim8/examples/worlds | Apache 2.0 |
-| `models/x3_uav/` | X3 UAV, version 4, Gazebo Fuel: https://app.gazebosim.org/OpenRobotics/fuel/models/X3%20UAV (only `model.config` and `model.sdf`) | CC BY 4.0 |
-| `launch/unique_multi_tb3_simulation_launch.py` | nav2_bringup 1.3.13 (Jazzy): https://github.com/ros-navigation/navigation2/tree/jazzy/nav2_bringup | Apache 2.0 |
-| `config/nav2_multirobot_params_1.yaml`, `config/nav2_multirobot_params_2.yaml` | nav2_bringup 1.3.13 | Apache 2.0 |
+```
+sudo apt install ros-jazzy-ros-gz
+cd ros2_ws
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+```
+
+## Run
+
+```
+ros2 launch g22_hazard_bringup sim.launch.py
+```
+
+Starts Gazebo with the UAV (`uav1`) and the two ground robots (`ugv1`, `ugv2`). Add
+`headless:=True` to run without the Gazebo window.
+
+## Packages
+
+- `g22_hazard_bringup`: world, robot models and the simulation launch
+
+## Reused files
+
+The first commit has these files exactly as they were downloaded. Changes come in later
+commits.
+
+| File | Original | Source | Licence |
+|---|---|---|---|
+| `worlds/hazard_zone.sdf` | `sensor_tutorial.sdf` | Gazebo Harmonic, Sensors tutorial: https://gazebosim.org/docs/harmonic/sensors/ (https://github.com/gazebosim/docs, `harmonic/tutorials/sensors/`) | CC BY 4.0 |
+| `models/ugv/ugv.sdf.xacro` | `vehicle_blue` in `sensor_tutorial.sdf` | same tutorial (also "Building your own robot" and "Moving the robot") | CC BY 4.0 |
+| `models/x3_uav/` | X3 UAV, version 4 (meshes replaced by simple shapes) | Gazebo Fuel: https://app.gazebosim.org/OpenRobotics/fuel/models/X3%20UAV | CC BY 4.0 |
+| `models/x3_uav/model.sdf` (plugins) | `multicopter_velocity_control.sdf` | gz-sim 8 example worlds: https://github.com/gazebosim/gz-sim/tree/gz-sim8/examples/worlds | Apache 2.0 |
+| `launch/sim.launch.py` | `unique_multi_tb3_simulation_launch.py` | nav2_bringup 1.3.13 (Jazzy): https://github.com/ros-navigation/navigation2/tree/jazzy/nav2_bringup | Apache 2.0 |
+| `config/nav2_ugv1.yaml`, `config/nav2_ugv2.yaml` | `nav2_multirobot_params_1.yaml`, `nav2_multirobot_params_2.yaml` | nav2_bringup 1.3.13 | Apache 2.0 |
 
 Paths above are inside `ros2_ws/src/g22_hazard_bringup/`.
 
