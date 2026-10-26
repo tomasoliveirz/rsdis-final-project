@@ -34,8 +34,8 @@
 
             <engine>ogre2</engine>
             <scene>scene</scene>
-            <ambient_light>0.4 0.4 0.4</ambient_light>
-            <background_color>0.8 0.8 0.8</background_color>
+            <ambient_light>0.42 0.4 0.36</ambient_light>
+            <background_color>0.6 0.56 0.48</background_color>
             <camera_pose>0 -26 20 0 0.65 1.5708</camera_pose>
             <camera_clip>
               <near>0.25</near>
@@ -274,7 +274,7 @@
         <light type="directional" name="sun">
             <cast_shadows>true</cast_shadows>
             <pose>0 0 10 0 0 0</pose>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <diffuse>0.85 0.78 0.65 1</diffuse>
             <specular>0.2 0.2 0.2 1</specular>
             <attenuation>
                 <range>1000</range>
@@ -303,9 +303,9 @@
                     </plane>
                 </geometry>
                 <material>
-                    <ambient>0.8 0.8 0.8 1</ambient>
-                    <diffuse>0.8 0.8 0.8 1</diffuse>
-                    <specular>0.8 0.8 0.8 1</specular>
+                    <ambient>0.4 0.37 0.32 1</ambient>
+                    <diffuse>0.4 0.37 0.32 1</diffuse>
+                    <specular>0.1 0.1 0.1 1</specular>
                 </material>
                 </visual>
             </link>
@@ -321,7 +321,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
-                    <material><ambient>0.45 0.43 0.4 1</ambient><diffuse>0.45 0.43 0.4 1</diffuse></material>
+                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
                 </visual>
             </link>
             <link name="wall_south">
@@ -331,7 +331,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
-                    <material><ambient>0.45 0.43 0.4 1</ambient><diffuse>0.45 0.43 0.4 1</diffuse></material>
+                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
                 </visual>
             </link>
             <link name="wall_east">
@@ -341,7 +341,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>0.4 24 2.5</size></box></geometry>
-                    <material><ambient>0.45 0.43 0.4 1</ambient><diffuse>0.45 0.43 0.4 1</diffuse></material>
+                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
                 </visual>
             </link>
             <link name="wall_west">
@@ -351,7 +351,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>0.4 24 2.5</size></box></geometry>
-                    <material><ambient>0.45 0.43 0.4 1</ambient><diffuse>0.45 0.43 0.4 1</diffuse></material>
+                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
                 </visual>
             </link>
             <link name="warehouse">
@@ -361,7 +361,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>8 5 5</size></box></geometry>
-                    <material><ambient>0.62 0.6 0.56 1</ambient><diffuse>0.62 0.6 0.56 1</diffuse></material>
+                    <material><ambient>0.47 0.45 0.41 1</ambient><diffuse>0.47 0.45 0.41 1</diffuse></material>
                 </visual>
             </link>
             <link name="pipe_rack">
@@ -371,7 +371,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>6 0.4 1.2</size></box></geometry>
-                    <material><ambient>0.45 0.25 0.15 1</ambient><diffuse>0.45 0.25 0.15 1</diffuse></material>
+                    <material><ambient>0.38 0.22 0.14 1</ambient><diffuse>0.38 0.22 0.14 1</diffuse></material>
                 </visual>
             </link>
             <link name="container_1">
@@ -381,7 +381,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.75 0.35 0.1 1</ambient><diffuse>0.75 0.35 0.1 1</diffuse></material>
+                    <material><ambient>0.55 0.3 0.16 1</ambient><diffuse>0.55 0.3 0.16 1</diffuse></material>
                 </visual>
             </link>
             <link name="container_2">
@@ -391,7 +391,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.15 0.3 0.55 1</ambient><diffuse>0.15 0.3 0.55 1</diffuse></material>
+                    <material><ambient>0.24 0.34 0.34 1</ambient><diffuse>0.24 0.34 0.34 1</diffuse></material>
                 </visual>
             </link>
             <link name="container_3">
@@ -401,7 +401,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.55 0.12 0.1 1</ambient><diffuse>0.55 0.12 0.1 1</diffuse></material>
+                    <material><ambient>0.42 0.16 0.12 1</ambient><diffuse>0.42 0.16 0.12 1</diffuse></material>
                 </visual>
             </link>
             <link name="container_4">
@@ -411,7 +411,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.2 0.4 0.2 1</ambient><diffuse>0.2 0.4 0.2 1</diffuse></material>
+                    <material><ambient>0.32 0.34 0.22 1</ambient><diffuse>0.32 0.34 0.22 1</diffuse></material>
                 </visual>
             </link>
             <link name="tank_1">
@@ -421,7 +421,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><cylinder><radius>1.6</radius><length>5</length></cylinder></geometry>
-                    <material><ambient>0.6 0.6 0.55 1</ambient><diffuse>0.6 0.6 0.55 1</diffuse></material>
+                    <material><ambient>0.52 0.5 0.45 1</ambient><diffuse>0.52 0.5 0.45 1</diffuse></material>
                 </visual>
             </link>
             <link name="tank_2">
@@ -431,7 +431,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><cylinder><radius>1.2</radius><length>4</length></cylinder></geometry>
-                    <material><ambient>0.5 0.52 0.45 1</ambient><diffuse>0.5 0.52 0.45 1</diffuse></material>
+                    <material><ambient>0.46 0.45 0.4 1</ambient><diffuse>0.46 0.45 0.4 1</diffuse></material>
                 </visual>
             </link>
             <link name="barrier_1">
@@ -441,7 +441,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>3 0.6 0.8</size></box></geometry>
-                    <material><ambient>0.62 0.6 0.56 1</ambient><diffuse>0.62 0.6 0.56 1</diffuse></material>
+                    <material><ambient>0.58 0.56 0.52 1</ambient><diffuse>0.58 0.56 0.52 1</diffuse></material>
                 </visual>
             </link>
             <link name="barrier_2">
@@ -451,37 +451,37 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>3 0.6 0.8</size></box></geometry>
-                    <material><ambient>0.62 0.6 0.56 1</ambient><diffuse>0.62 0.6 0.56 1</diffuse></material>
+                    <material><ambient>0.58 0.56 0.52 1</ambient><diffuse>0.58 0.56 0.52 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_1">
-                <pose>0 1 0.3 0 0 0.3</pose>
+                <pose>-2.3 4.9 0.3 0 0 0.3</pose>
                 <collision name="collision">
                     <geometry><box><size>1.2 0.8 0.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>1.2 0.8 0.6</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_2">
-                <pose>1.6 -0.6 0.25 0 0 0.8</pose>
+                <pose>-1.7 4 0.25 0 0 0.8</pose>
                 <collision name="collision">
                     <geometry><box><size>0.8 0.8 0.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>0.8 0.8 0.5</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_3">
-                <pose>-3 2.5 0.2 0 0 1</pose>
+                <pose>-2.5 3.4 0.2 0 0 1</pose>
                 <collision name="collision">
                     <geometry><box><size>1.5 0.6 0.4</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>1.5 0.6 0.4</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_4">
@@ -491,7 +491,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>1 1 0.7</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_5">
@@ -501,7 +501,7 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>1.2 0.5 0.5</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
                 </visual>
             </link>
             <link name="rubble_6">
@@ -511,7 +511,137 @@
                 </collision>
                 <visual name="visual">
                     <geometry><box><size>0.9 0.7 0.5</size></box></geometry>
-                    <material><ambient>0.4 0.37 0.33 1</ambient><diffuse>0.4 0.37 0.33 1</diffuse></material>
+                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="car_1">
+                <pose>2.5 -2.2 0.4 0 0 0.2</pose>
+                <collision name="collision">
+                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
+                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="car_1_cabin">
+                <pose>2.5 -2.2 1.05 0 0 0.2</pose>
+                <collision name="collision">
+                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
+                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="car_2">
+                <pose>-7 1.5 0.4 0 0 0.15</pose>
+                <collision name="collision">
+                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
+                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="car_2_cabin">
+                <pose>-7 1.5 1.05 0 0 0.15</pose>
+                <collision name="collision">
+                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
+                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_1">
+                <pose>-2.2 -0.6 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_2">
+                <pose>-2.7 -1.2 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_3">
+                <pose>-1.9 -1.3 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_4">
+                <pose>8 -2 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_5">
+                <pose>8.3 -2.6 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_6">
+                <pose>7.7 -2.7 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_7">
+                <pose>13.8 6.3 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_8">
+                <pose>14.2 5.6 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="barrel_9">
+                <pose>13.6 5 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
                 </visual>
             </link>
         </model>
@@ -523,7 +653,7 @@
             <link name="link">
                 <visual name="visual">
                     <geometry><cylinder><radius>0.8</radius><length>0.01</length></cylinder></geometry>
-                    <material><ambient>0.9 0.75 0.1 1</ambient><diffuse>0.9 0.75 0.1 1</diffuse></material>
+                    <material><ambient>0.75 0.62 0.15 1</ambient><diffuse>0.75 0.62 0.15 1</diffuse></material>
                 </visual>
             </link>
         </model>
