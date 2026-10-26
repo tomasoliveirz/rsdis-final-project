@@ -1,4 +1,4 @@
-"""UAV mission: take off from the pad and hover at the survey altitude.
+"""UAV mission: take off from the pad and fly a lawnmower route over the yard.
 
 The X3 controller takes velocity commands in the body frame, so this node runs
 a P controller on the position from odometry (world frame).
@@ -10,6 +10,8 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Bool
+
+from g22_hazard_mission.search import lawnmower
 
 
 def yaw_of(q):
@@ -23,6 +25,12 @@ class UavSurvey(Node):
         self.altitude = self.declare_parameter('altitude', 6.0).value
         self.max_speed = self.declare_parameter('max_speed', 2.0).value
         self.tolerance = self.declare_parameter('tolerance', 0.4).value
+        # x_min, x_max, y_min, y_max of the survey
+        area = self.declare_parameter('area', [-13.0, 13.0, -10.0, 10.0]).value
+        spacing = self.declare_parameter('lane_spacing', 6.0).value
+
+        self.route = lawnmower(*area, spacing)
+        self.waypoint = 0
 
         self.pose = None
         self.home = None
@@ -61,10 +69,16 @@ class UavSurvey(Node):
         if self.state == 'takeoff':
             self.enable_pub.publish(Bool(data=True))
             if self.fly_to(*self.home, self.altitude):
-                self.get_logger().info(f'at {self.altitude} m')
-                self.state = 'hover'
+                self.get_logger().info(f'at {self.altitude} m, starting the survey')
+                self.state = 'survey'
+        elif self.state == 'survey':
+            if self.fly_to(*self.route[self.waypoint], self.altitude):
+                self.waypoint += 1
+                if self.waypoint == len(self.route):
+                    self.get_logger().info('survey done')
+                    self.state = 'hover'
         elif self.state == 'hover':
-            self.fly_to(*self.home, self.altitude)
+            self.fly_to(*self.route[-1], self.altitude)
 
 
 def main():
