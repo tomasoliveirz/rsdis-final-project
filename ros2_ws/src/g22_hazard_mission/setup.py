@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'hazard_sensor = g22_hazard_mission.hazard_sensor:main',
             'hazard_viz = g22_hazard_mission.hazard_viz:main',
+            'uav_survey = g22_hazard_mission.uav_survey:main',
         ],
     },
 )
