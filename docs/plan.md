@@ -11,6 +11,10 @@ source is, and sends that position to a coordinator. The coordinator picks the c
 the two ground robots, which drives there with Nav2, takes a measurement on the ground and
 confirms the hazard.
 
+Some barrels have a gas or radiation sign on them. A sign only means there might be a
+leak, so the UAV camera picks up the signs with OpenCV and the UAV checks the readings
+around each one.
+
 At the end RViz shows the safe and dangerous zones and the detections.
 
 ## What we reuse
@@ -24,6 +28,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 
 - simulated gas and radiation sensors
 - UAV route and local search
+- sign detection on the UAV camera images (OpenCV)
 - coordinator that sends the closest ground robot
 - hazard markers in RViz
 
@@ -32,6 +37,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 - [x] world with the UAV and two ground robots running Nav2
 - [x] gas and radiation sensors
 - [ ] UAV route and local search
+- [ ] signs on the barrels and OpenCV sign detection
 - [ ] coordinator
 - [x] RViz markers (zones and robots, detections still to do)
 - [ ] whole mission from one launch file
