@@ -36,7 +36,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 
 - [x] world with the UAV and two ground robots running Nav2
 - [x] gas and radiation sensors
-- [ ] UAV route and local search
+- [x] UAV route and local search
 - [ ] signs on the barrels and OpenCV sign detection
 - [ ] coordinator
 - [x] RViz markers (zones and robots, detections still to do)

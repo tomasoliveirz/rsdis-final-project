@@ -1,6 +1,7 @@
 """UAV mission: take off from the pad and fly a lawnmower route over the yard.
 When a reading goes above the threshold, search around it for the source and
-report it as a hazard candidate, then carry on with the route.
+report it as a hazard candidate, then carry on with the route. At the end fly
+back to the take-off point and land.
 
 The X3 controller takes velocity commands in the body frame, so this node runs
 a P controller on the position from odometry (world frame).
@@ -142,8 +143,8 @@ class UavSurvey(Node):
             if self.fly_to(*self.route[self.waypoint], self.altitude):
                 self.waypoint += 1
                 if self.waypoint == len(self.route):
-                    self.get_logger().info('survey done')
-                    self.state = 'hover'
+                    self.get_logger().info(f'survey done, {len(self.found)} hazards found')
+                    self.state = 'return'
         elif self.state == 'search':
             if self.fly_to(*self.search.target, self.altitude) and self.samples is None:
                 self.samples = []
@@ -152,8 +153,16 @@ class UavSurvey(Node):
                 self.samples = None
                 if self.search.done:
                     self.finish_search()
-        elif self.state == 'hover':
-            self.fly_to(*self.route[-1], self.altitude)
+        elif self.state == 'return':
+            if self.fly_to(*self.home, self.altitude):
+                self.state = 'land'
+        elif self.state == 'land':
+            self.fly_to(*self.home, 0.0)
+            if self.pose.position.z < 0.15:
+                self.cmd_pub.publish(Twist())
+                self.enable_pub.publish(Bool(data=False))
+                self.get_logger().info('landed')
+                self.state = 'landed'
 
 
 def main():
