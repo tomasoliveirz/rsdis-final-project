@@ -19,13 +19,14 @@ setup(
     zip_safe=True,
     maintainer='RSDIS Group 22',
     maintainer_email='group22@example.com',
-    description='Simulated gas/radiation sensors and hazard visualisation.',
+    description='Simulated gas/radiation sensors, UAV mission, sign detection and hazard visualisation.',
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'hazard_sensor = g22_hazard_mission.hazard_sensor:main',
             'hazard_viz = g22_hazard_mission.hazard_viz:main',
+            'sign_detector = g22_hazard_mission.sign_detector:main',
             'uav_survey = g22_hazard_mission.uav_survey:main',
         ],
     },

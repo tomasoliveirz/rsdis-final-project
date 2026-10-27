@@ -1,4 +1,6 @@
-"""Sensors on the three robots, the UAV mission, the hazard map and RViz. Run after sim.launch.py."""
+"""Sensors on the three robots, the UAV mission, sign detection, the hazard map and RViz.
+Run after sim.launch.py.
+"""
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -45,6 +47,14 @@ def generate_launch_description():
         output='screen',
     )
 
+    signs = Node(
+        package='g22_hazard_mission',
+        executable='sign_detector',
+        namespace='uav1',
+        parameters=[{'use_sim_time': True}],
+        output='screen',
+    )
+
     viz = Node(
         package='g22_hazard_mission',
         executable='hazard_viz',
@@ -76,6 +86,7 @@ def generate_launch_description():
         DeclareLaunchArgument('use_rviz', default_value='true'),
         *sensors,
         uav,
+        signs,
         viz,
         rviz,
     ])

@@ -51,6 +51,16 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
+    - Class: rviz_default_plugins/Image
+      Name: UAV camera
+      Enabled: true
+      Normalize Range: true
+      Topic:
+        Value: /uav1/camera/signs
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48

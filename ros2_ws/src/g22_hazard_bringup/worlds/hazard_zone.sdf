@@ -560,8 +560,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_2">
@@ -570,8 +575,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_3">
@@ -580,8 +590,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_4">
@@ -590,8 +605,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_5">
@@ -600,18 +620,28 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_6">
-                <pose>7.7 -2.7 0.45 0 0 0</pose>
+                <pose>7.6 -2.75 0.45 0 0 0</pose>
                 <collision name="collision">
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.62 0.5 0.12 1</ambient><diffuse>0.62 0.5 0.12 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_7">
@@ -620,8 +650,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_8">
@@ -630,8 +665,13 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
             <link name="barrel_9">
@@ -640,8 +680,88 @@
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_10">
+                <pose>-4.5 -6 0.45 0 0 0</pose>
+                <collision name="collision">
                     <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
-                    <material><ambient>0.3 0.4 0.15 1</ambient><diffuse>0.3 0.4 0.15 1</diffuse></material>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_11">
+                <pose>-12.5 4 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_12">
+                <pose>-8 -9.5 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/ring_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/ring_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_13">
+                <pose>3.5 -9.2 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/black_diamond_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/black_diamond_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_14">
+                <pose>0.5 6.8 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/empty_diamond_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/empty_diamond_lid.png</albedo_map></metal></pbr></material>
                 </visual>
             </link>
         </model>

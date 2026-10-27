@@ -116,6 +116,15 @@ def generate_launch_description():
         output='screen',
     )
 
+    # UAV camera, in its own bridge so the images do not hold up the clock
+    camera_bridge_cmd = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        arguments=['/uav1/camera/image'],
+        parameters=[{'use_sim_time': True}],
+        output='screen',
+    )
+
     # Define commands for launching the ground robots and their navigation
     nav_instances_cmds = []
     for robot in robots:
@@ -209,6 +218,7 @@ def generate_launch_description():
     ld.add_action(start_gazebo_cmd)
     ld.add_action(start_gazebo_gui_cmd)
     ld.add_action(gz_bridge_cmd)
+    ld.add_action(camera_bridge_cmd)
 
     for simulation_instance_cmd in nav_instances_cmds:
         ld.add_action(simulation_instance_cmd)

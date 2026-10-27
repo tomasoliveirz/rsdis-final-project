@@ -1,8 +1,8 @@
 """Hazard map for RViz.
 
 The area is split into cells coloured by the worst reading seen in them (green,
-yellow or red). It also shows each robot with its last reading, the hazards the
-UAV found, and the real sources when show_truth is true.
+yellow or red). It also shows each robot with its last reading, the signs and
+hazards the UAV found, and the real sources when show_truth is true.
 """
 import math
 
@@ -13,7 +13,7 @@ from geometry_msgs.msg import Point
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import Marker, MarkerArray
 
-from g22_hazard_interfaces.msg import Hazard, SensorReading
+from g22_hazard_interfaces.msg import Hazard, SensorReading, Sign
 from g22_hazard_mission import field
 
 SAFE = ColorRGBA(r=0.1, g=0.8, b=0.2, a=0.35)
@@ -41,11 +41,13 @@ class HazardViz(Node):
         self.cells = {}   # (i, j) -> worst level (0 safe, 1 caution, 2 danger)
         self.robots = {}  # name -> last SensorReading
         self.hazards = {}  # id -> Hazard found by the UAV
+        self.signs = {}  # id -> Sign seen by the UAV camera
 
         for r in robots:
             self.create_subscription(SensorReading, f'/{r}/reading', self.on_reading, 10)
         latched = QoSProfile(depth=10, durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.create_subscription(Hazard, '/hazards/candidates', self.on_hazard, latched)
+        self.create_subscription(Sign, '/signs', self.on_sign, latched)
         self.pub = self.create_publisher(MarkerArray, '/hazards/markers', 10)
         self.create_timer(0.5, self.publish)
 
@@ -63,6 +65,9 @@ class HazardViz(Node):
 
     def on_hazard(self, msg):
         self.hazards[msg.id] = msg
+
+    def on_sign(self, msg):
+        self.signs[msg.id] = msg
 
     def marker(self, ns, mid, mtype):
         m = Marker()
@@ -114,6 +119,22 @@ class HazardViz(Node):
             label.text = (f'#{h.id} gas {h.value:.1f} ppm' if gas
                           else f'#{h.id} radiation {h.value:.2f} uSv/h')
             out.markers += [disc, label]
+
+        for k, s in enumerate(sorted(self.signs.values(), key=lambda s: s.id)):
+            gas = s.type == Sign.GAS
+            square = self.marker('signs', k, Marker.CUBE)
+            square.pose.position.x, square.pose.position.y = s.position.x, s.position.y
+            square.pose.position.z = 1.2
+            square.scale.x = square.scale.y = 0.8
+            square.scale.z = 0.05
+            square.color = GAS if gas else RADIATION
+            label = self.marker('sign_labels', k, Marker.TEXT_VIEW_FACING)
+            label.pose.position.x, label.pose.position.y = s.position.x, s.position.y
+            label.pose.position.z = 2.0
+            label.scale.z = 0.5
+            label.color = ColorRGBA(r=1.0, g=1.0, b=1.0, a=1.0)
+            label.text = 'gas sign' if gas else 'radiation sign'
+            out.markers += [square, label]
 
         for k, s in enumerate(self.truth):
             t = self.marker('truth', k, Marker.CYLINDER)
