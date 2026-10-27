@@ -39,7 +39,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 - [x] UAV route and local search
 - [ ] signs on the barrels and OpenCV sign detection
 - [ ] coordinator
-- [x] RViz markers (zones and robots, detections still to do)
+- [x] RViz markers (zones, robots and the hazards found)
 - [ ] whole mission from one launch file
 - [ ] video
 - [ ] report

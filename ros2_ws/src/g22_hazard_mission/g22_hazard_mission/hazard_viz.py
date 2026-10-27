@@ -1,23 +1,26 @@
 """Hazard map for RViz.
 
 The area is split into cells coloured by the worst reading seen in them (green,
-yellow or red). It also shows each robot with its last reading, and the real
-sources when show_truth is true.
+yellow or red). It also shows each robot with its last reading, the hazards the
+UAV found, and the real sources when show_truth is true.
 """
 import math
 
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, QoSProfile
 from geometry_msgs.msg import Point
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import Marker, MarkerArray
 
-from g22_hazard_interfaces.msg import SensorReading
+from g22_hazard_interfaces.msg import Hazard, SensorReading
 from g22_hazard_mission import field
 
 SAFE = ColorRGBA(r=0.1, g=0.8, b=0.2, a=0.35)
 CAUTION = ColorRGBA(r=1.0, g=0.8, b=0.0, a=0.5)
 DANGER = ColorRGBA(r=0.9, g=0.1, b=0.1, a=0.6)
+GAS = ColorRGBA(r=0.5, g=0.9, b=0.1, a=0.8)
+RADIATION = ColorRGBA(r=1.0, g=0.85, b=0.0, a=0.8)
 
 
 class HazardViz(Node):
@@ -37,9 +40,12 @@ class HazardViz(Node):
         self.truth = field.load(hazards_file).sources if show_truth and hazards_file else []
         self.cells = {}   # (i, j) -> worst level (0 safe, 1 caution, 2 danger)
         self.robots = {}  # name -> last SensorReading
+        self.hazards = {}  # id -> Hazard found by the UAV
 
         for r in robots:
             self.create_subscription(SensorReading, f'/{r}/reading', self.on_reading, 10)
+        latched = QoSProfile(depth=10, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        self.create_subscription(Hazard, '/hazards/candidates', self.on_hazard, latched)
         self.pub = self.create_publisher(MarkerArray, '/hazards/markers', 10)
         self.create_timer(0.5, self.publish)
 
@@ -54,6 +60,9 @@ class HazardViz(Node):
         key = (math.floor(msg.position.x / self.cell), math.floor(msg.position.y / self.cell))
         self.cells[key] = max(self.cells.get(key, 0), self.level(msg))
         self.robots[msg.robot] = msg
+
+    def on_hazard(self, msg):
+        self.hazards[msg.id] = msg
 
     def marker(self, ns, mid, mtype):
         m = Marker()
@@ -88,6 +97,23 @@ class HazardViz(Node):
             label.color = ColorRGBA(r=1.0, g=1.0, b=1.0, a=1.0)
             label.text = f'{name}  {r.gas_ppm:.1f} ppm  {r.radiation_usvh:.2f} uSv/h'
             out.markers += [dot, label]
+
+        for k, h in enumerate(sorted(self.hazards.values(), key=lambda h: h.id)):
+            gas = h.type == Hazard.GAS
+            disc = self.marker('hazards', k, Marker.CYLINDER)
+            disc.pose.position.x, disc.pose.position.y = h.position.x, h.position.y
+            disc.pose.position.z = 0.05
+            disc.scale.x = disc.scale.y = 2.0
+            disc.scale.z = 0.1
+            disc.color = GAS if gas else RADIATION
+            label = self.marker('hazard_labels', k, Marker.TEXT_VIEW_FACING)
+            label.pose.position.x, label.pose.position.y = h.position.x, h.position.y
+            label.pose.position.z = 1.5
+            label.scale.z = 0.6
+            label.color = ColorRGBA(r=1.0, g=1.0, b=1.0, a=1.0)
+            label.text = (f'#{h.id} gas {h.value:.1f} ppm' if gas
+                          else f'#{h.id} radiation {h.value:.2f} uSv/h')
+            out.markers += [disc, label]
 
         for k, s in enumerate(self.truth):
             t = self.marker('truth', k, Marker.CYLINDER)
