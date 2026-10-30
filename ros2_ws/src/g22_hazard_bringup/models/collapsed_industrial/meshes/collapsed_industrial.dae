@@ -724,22 +724,22 @@
   </library_lights>
   <library_images>
     <image id="Destroyed_Industrial_Diffuse_tga">
-      <init_from>collapsed_industrial_diffuse.jpg</init_from>
+      <init_from>../materials/textures/collapsed_industrial_diffuse.jpg</init_from>
     </image>
     <image id="Destroyed_Industrial_Spec_tga">
-      <init_from>collapsed_industrial_spec.jpg</init_from>
+      <init_from>../materials/textures/collapsed_industrial_spec.jpg</init_from>
     </image>
     <image id="RoughConcrete_Diffuse_tga">
-      <init_from>rough_concrete_diffuse.jpg</init_from>
+      <init_from>../materials/textures/rough_concrete_diffuse.jpg</init_from>
     </image>
     <image id="RoughConcrete_Spec_tga">
-      <init_from>rough_concrete_spec.jpg</init_from>
+      <init_from>../materials/textures/rough_concrete_spec.jpg</init_from>
     </image>
     <image id="Rubble_Diffuse_tga">
-      <init_from>rubble_diffuse.jpg</init_from>
+      <init_from>../materials/textures/rubble_diffuse.jpg</init_from>
     </image>
     <image id="Rubble_Spec_tga">
-      <init_from>rubble_spec.jpg</init_from>
+      <init_from>../materials/textures/rubble_spec.jpg</init_from>
     </image>
   </library_images>
   <library_visual_scenes>

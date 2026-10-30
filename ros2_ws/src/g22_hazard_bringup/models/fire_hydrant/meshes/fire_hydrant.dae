@@ -154,10 +154,10 @@
   </library_lights>
   <library_images>
     <image id="FireHydrant_Diffuse_tga">
-      <init_from>fire_hydrant_diffuse.png</init_from>
+      <init_from>../materials/textures/fire_hydrant_diffuse.png</init_from>
     </image>
     <image id="FireHydrant_Spec_tga">
-      <init_from>fire_hydrant_spec.png</init_from>
+      <init_from>../materials/textures/fire_hydrant_spec.png</init_from>
     </image>
   </library_images>
   <library_visual_scenes>

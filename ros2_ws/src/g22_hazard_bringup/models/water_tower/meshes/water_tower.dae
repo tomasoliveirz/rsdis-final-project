@@ -153,10 +153,10 @@
   </library_lights>
   <library_images>
     <image id="WaterTower_Diffuse_tga">
-      <init_from>water_tower_diffuse.jpg</init_from>
+      <init_from>../materials/textures/water_tower_diffuse.jpg</init_from>
     </image>
     <image id="WaterTower_Spec_tga">
-      <init_from>water_tower_spec.jpg</init_from>
+      <init_from>../materials/textures/water_tower_spec.jpg</init_from>
     </image>
   </library_images>
   <library_visual_scenes>

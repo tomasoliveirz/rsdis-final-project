@@ -154,10 +154,10 @@
   </library_lights>
   <library_images>
     <image id="Reactor_Diffuse_tga">
-      <init_from>reactor_diffuse.jpg</init_from>
+      <init_from>../materials/textures/reactor_diffuse.jpg</init_from>
     </image>
     <image id="Reactor_Spec_tga">
-      <init_from>reactor_spec.jpg</init_from>
+      <init_from>../materials/textures/reactor_spec.jpg</init_from>
     </image>
   </library_images>
   <library_visual_scenes>

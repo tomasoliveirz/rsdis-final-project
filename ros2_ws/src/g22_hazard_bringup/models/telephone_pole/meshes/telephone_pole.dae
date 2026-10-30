@@ -243,16 +243,16 @@
   </library_lights>
   <library_images>
     <image id="TelephonePole_Metal_Diffuse_tga">
-      <init_from>telephone_pole_metal_diffuse.jpg</init_from>
+      <init_from>../materials/textures/telephone_pole_metal_diffuse.jpg</init_from>
     </image>
     <image id="TelephonePole_Metal_Spec_tga">
-      <init_from>telephone_pole_metal_spec.jpg</init_from>
+      <init_from>../materials/textures/telephone_pole_metal_spec.jpg</init_from>
     </image>
     <image id="TelephonePole_Wood_Diffuse_tga">
-      <init_from>telephone_pole_wood_diffuse.jpg</init_from>
+      <init_from>../materials/textures/telephone_pole_wood_diffuse.jpg</init_from>
     </image>
     <image id="TelephonePole_Wood_Spec_tga">
-      <init_from>telephone_pole_wood_spec.jpg</init_from>
+      <init_from>../materials/textures/telephone_pole_wood_spec.jpg</init_from>
     </image>
   </library_images>
   <library_visual_scenes>
