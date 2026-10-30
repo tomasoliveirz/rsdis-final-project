@@ -19,6 +19,7 @@ At the end RViz shows the safe and dangerous zones and the detections.
 - UAV: X3 from Gazebo Fuel, with the velocity controller from the gz-sim multicopter example
 - Ground robots: the robot from the Gazebo tutorials (box, two wheels, caster, lidar), made smaller
 - Navigation: the Nav2 multi-robot launch and parameters from `nav2_bringup`
+- Decor: barriers, car wrecks, pallets, cooling tower etc. from the Gazebo classic model database
 
 ## What we write
 
