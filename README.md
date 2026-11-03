@@ -32,8 +32,19 @@ In a second terminal:
 ros2 launch g22_hazard_mission mission.launch.py
 ```
 
-Starts the simulated gas/radiation sensor on each robot, the UAV mission, the hazard
-map and RViz. Add `show_truth:=true` to also draw the real sources.
+Starts the simulated gas/radiation sensor on each robot, the UAV mission (survey,
+local search, return and landing), the coordinator that sends the closest ground robot
+to confirm each hazard, the metrics logger and RViz with the hazard map. Add
+`show_truth:=true` to also draw the real sources.
+
+Or everything from one launch file (the mission starts 25 s after the simulation):
+
+```
+ros2 launch g22_hazard_mission all.launch.py headless:=True show_truth:=true
+```
+
+Each run writes a CSV in `~/g22_runs/` with the estimates, the confirmations, their
+time and their distance to the real sources.
 
 The map in `maps/` is generated from the world with `scripts/make_map.py`.
 The decor (`models/g22_decor/`) is generated with `scripts/make_decor.py`.
@@ -42,10 +53,11 @@ The decor (`models/g22_decor/`) is generated with `scripts/make_decor.py`.
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch
 - `g22_hazard_interfaces`: our messages
-- `g22_hazard_mission`: our nodes (`hazard_sensor`, `hazard_viz`, `uav_survey`)
+- `g22_hazard_mission`: our nodes (`hazard_sensor`, `uav_survey`, `coordinator`,
+  `hazard_viz`, `mission_logger`)
 
 The hidden sources are in `g22_hazard_mission/config/hazards.yaml`. Only the sensor
-simulation reads that file.
+simulation, the metrics logger and `show_truth` read that file.
 
 ## Reused files
 

@@ -1,8 +1,9 @@
 """Hazard map for RViz.
 
 The area is split into cells coloured by the worst reading seen in them (green,
-yellow or red). It also shows each robot with its last reading, and the real
-sources when show_truth is true.
+yellow or red). It also shows each robot with its last reading, the sources
+estimated by the UAV (orange), their ground checks (red if confirmed, grey if
+not) and the real sources when show_truth is true.
 """
 import math
 
@@ -12,12 +13,15 @@ from geometry_msgs.msg import Point
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import Marker, MarkerArray
 
-from g22_hazard_interfaces.msg import SensorReading
+from g22_hazard_interfaces.msg import Detection, SensorReading
 from g22_hazard_mission import field
 
 SAFE = ColorRGBA(r=0.1, g=0.8, b=0.2, a=0.35)
 CAUTION = ColorRGBA(r=1.0, g=0.8, b=0.0, a=0.5)
 DANGER = ColorRGBA(r=0.9, g=0.1, b=0.1, a=0.6)
+ESTIMATE = ColorRGBA(r=1.0, g=0.5, b=0.0, a=0.9)
+CONFIRMED = ColorRGBA(r=0.9, g=0.0, b=0.0, a=0.9)
+REJECTED = ColorRGBA(r=0.5, g=0.5, b=0.5, a=0.9)
 
 
 class HazardViz(Node):
@@ -37,9 +41,15 @@ class HazardViz(Node):
         self.truth = field.load(hazards_file).sources if show_truth and hazards_file else []
         self.cells = {}   # (i, j) -> worst level (0 safe, 1 caution, 2 danger)
         self.robots = {}  # name -> last SensorReading
+        self.estimates = {}      # id -> Detection from the UAV
+        self.confirmations = {}  # id -> Detection from a UGV
 
         for r in robots:
             self.create_subscription(SensorReading, f'/{r}/reading', self.on_reading, 10)
+        self.create_subscription(Detection, '/hazards/detections',
+                                 lambda m: self.estimates.__setitem__(m.id, m), 10)
+        self.create_subscription(Detection, '/hazards/confirmations',
+                                 lambda m: self.confirmations.__setitem__(m.id, m), 10)
         self.pub = self.create_publisher(MarkerArray, '/hazards/markers', 10)
         self.create_timer(0.5, self.publish)
 
@@ -82,9 +92,9 @@ class HazardViz(Node):
             dot.color = ColorRGBA(r=0.2, g=0.4, b=1.0, a=0.9)
             label = self.marker('robot_labels', k, Marker.TEXT_VIEW_FACING)
             label.pose.position.x = r.position.x
-            label.pose.position.y = r.position.y
+            label.pose.position.y = r.position.y - 1.7
             label.pose.position.z = r.position.z + 0.8
-            label.scale.z = 0.5
+            label.scale.z = 0.35
             label.color = ColorRGBA(r=1.0, g=1.0, b=1.0, a=1.0)
             label.text = f'{name}  {r.gas_ppm:.1f} ppm  {r.radiation_usvh:.2f} uSv/h'
             out.markers += [dot, label]
@@ -96,6 +106,34 @@ class HazardViz(Node):
             t.scale.z = 1.0
             t.color = ColorRGBA(r=0.6, g=0.0, b=0.8, a=0.8)
             out.markers.append(t)
+
+        for hid, e in sorted(self.estimates.items()):
+            unit = 'ppm' if e.hazard_type == 'gas' else 'uSv/h'
+            dot = self.marker('estimates', hid, Marker.SPHERE)
+            dot.pose.position.x, dot.pose.position.y, dot.pose.position.z = e.position.x, e.position.y, 0.3
+            dot.scale.x = dot.scale.y = dot.scale.z = 0.6
+            dot.color = ESTIMATE
+            text = self.marker('estimate_labels', hid, Marker.TEXT_VIEW_FACING)
+            # above the source in the top view; the ground check goes below it
+            text.pose.position.x, text.pose.position.y, text.pose.position.z = e.position.x, e.position.y + 0.9, 1.2
+            text.scale.z = 0.4
+            text.color = ESTIMATE
+            text.text = f'#{hid} {e.hazard_type}: UAV {e.value:.1f} {unit}'
+            out.markers += [dot, text]
+            c = self.confirmations.get(hid)
+            if c is None:
+                continue
+            ring = self.marker('confirmations', hid, Marker.CYLINDER)
+            ring.pose.position.x, ring.pose.position.y, ring.pose.position.z = c.position.x, c.position.y, 0.05
+            ring.scale.x = ring.scale.y = 1.2
+            ring.scale.z = 0.1
+            ring.color = CONFIRMED if c.confirmed else REJECTED
+            label = self.marker('confirmation_labels', hid, Marker.TEXT_VIEW_FACING)
+            label.pose.position.x, label.pose.position.y, label.pose.position.z = c.position.x, c.position.y - 0.9, 1.9
+            label.scale.z = 0.4
+            label.color = ring.color
+            label.text = f'{"CONFIRMED" if c.confirmed else "NOT confirmed"}: {c.robot} {c.value:.1f} {unit}'
+            out.markers += [ring, label]
 
         self.pub.publish(out)
 

@@ -32,10 +32,11 @@ At the end RViz shows the safe and dangerous zones and the detections.
 
 - [x] world with the UAV and two ground robots running Nav2
 - [x] gas and radiation sensors
-- [ ] UAV route and local search
-- [ ] coordinator
-- [x] RViz markers (zones and robots, detections still to do)
-- [ ] whole mission from one launch file
+- [x] UAV route and local search
+- [x] coordinator
+- [x] RViz markers (zones, robots, estimates and confirmations)
+- [x] whole mission from one launch file (`all.launch.py`)
+- [x] metrics logger (CSV per run in `~/g22_runs`)
 - [ ] video
 - [ ] report
 
