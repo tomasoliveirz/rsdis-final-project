@@ -73,51 +73,68 @@ def extents(shape):
     return c * a / 2 + s * b / 2, s * a / 2 + c * b / 2
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('world')
-    ap.add_argument('out', help='output path without extension')
-    ap.add_argument('--resolution', type=float, default=0.05)
-    ap.add_argument('--margin', type=float, default=1.0)
-    args = ap.parse_args()
+def map_bounds(shapes, margin):
+    sizes = [extents(shape) for shape in shapes]
+    xmin = min(shape[1] - size[0] for shape, size in zip(shapes, sizes)) - margin
+    xmax = max(shape[1] + size[0] for shape, size in zip(shapes, sizes)) + margin
+    ymin = min(shape[2] - size[1] for shape, size in zip(shapes, sizes)) - margin
+    ymax = max(shape[2] + size[1] for shape, size in zip(shapes, sizes)) + margin
+    return xmin, xmax, ymin, ymax
 
-    world = ET.parse(args.world).getroot().find('world')
-    shapes = list(obstacles(world))
-    ext = [extents(s) for s in shapes]
-    xmin = min(s[1] - e[0] for s, e in zip(shapes, ext)) - args.margin
-    xmax = max(s[1] + e[0] for s, e in zip(shapes, ext)) + args.margin
-    ymin = min(s[2] - e[1] for s, e in zip(shapes, ext)) - args.margin
-    ymax = max(s[2] + e[1] for s, e in zip(shapes, ext)) + args.margin
 
-    res = args.resolution
-    w, h = int(math.ceil((xmax - xmin) / res)), int(math.ceil((ymax - ymin) / res))
+def rasterize(shapes, bounds, resolution):
+    xmin, xmax, ymin, ymax = bounds
+    width = int(math.ceil((xmax - xmin) / resolution))
+    height = int(math.ceil((ymax - ymin) / resolution))
+    sizes = [extents(shape) for shape in shapes]
     rows = []
-    for j in range(h):  # PGM rows go from top (ymax) to bottom
-        py = ymax - (j + 0.5) * res
-        row = bytearray(254 for _ in range(w))
-        for s, (ex, ey) in zip(shapes, ext):
-            if abs(py - s[2]) > ey:
+    for j in range(height):  # PGM starts at the top of the map.
+        py = ymax - (j + 0.5) * resolution
+        row = bytearray(254 for _ in range(width))
+        for shape, (ex, ey) in zip(shapes, sizes):
+            if abs(py - shape[2]) > ey:
                 continue
-            i0 = max(0, int((s[1] - ex - xmin) / res))
-            i1 = min(w, int((s[1] + ex - xmin) / res) + 1)
-            for i in range(i0, i1):
-                if occupied(s, xmin + (i + 0.5) * res, py):
+            first = max(0, int((shape[1] - ex - xmin) / resolution))
+            last = min(width, int((shape[1] + ex - xmin) / resolution) + 1)
+            for i in range(first, last):
+                if occupied(shape, xmin + (i + 0.5) * resolution, py):
                     row[i] = 0
         rows.append(bytes(row))
+    return width, height, rows
 
-    with open(args.out + '.pgm', 'wb') as f:
-        f.write(f'P5\n{w} {h}\n255\n'.encode())
-        f.writelines(rows)
-    # origin is the bottom-left corner of the image
-    with open(args.out + '.yaml', 'w') as f:
-        f.write(f'image: {os.path.basename(args.out)}.pgm\n'
-                'mode: trinary\n'
-                f'resolution: {res}\n'
-                f'origin: [{xmin:.3f}, {ymax - h * res:.3f}, 0.0]\n'
-                'negate: 0\n'
-                'occupied_thresh: 0.65\n'
-                'free_thresh: 0.25\n')
-    print(f'{len(shapes)} obstacles, {w}x{h} cells -> {args.out}.pgm')
+
+def write_image(path, width, height, rows):
+    with open(path, 'wb') as file:
+        file.write(f'P5\n{width} {height}\n255\n'.encode())
+        file.writelines(rows)
+
+
+def write_metadata(out, resolution, origin):
+    x, y = origin
+    with open(out + '.yaml', 'w') as file:
+        file.write(f'image: {os.path.basename(out)}.pgm\n'
+                   'mode: trinary\n'
+                   f'resolution: {resolution}\n'
+                   f'origin: [{x:.3f}, {y:.3f}, 0.0]\n'
+                   'negate: 0\n'
+                   'occupied_thresh: 0.65\n'
+                   'free_thresh: 0.25\n')
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('world')
+    parser.add_argument('out', help='output path without extension')
+    parser.add_argument('--resolution', type=float, default=0.05)
+    parser.add_argument('--margin', type=float, default=1.0)
+    args = parser.parse_args()
+    world = ET.parse(args.world).getroot().find('world')
+    shapes = list(obstacles(world))
+    bounds = map_bounds(shapes, args.margin)
+    width, height, rows = rasterize(shapes, bounds, args.resolution)
+    write_image(args.out + '.pgm', width, height, rows)
+    write_metadata(args.out, args.resolution, (bounds[0], bounds[3] - height * args.resolution))
+    print(f'{len(shapes)} obstacles, {width}x{height} cells -> {args.out}.pgm')
 
 
 if __name__ == '__main__':

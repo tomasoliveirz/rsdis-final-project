@@ -1,5 +1,5 @@
 # ground, made by make_decor.py
-mtllib ground.mtl
+mtllib dirt.mtl
 usemtl dirt
 v -60.0000 -60.0000 0.0000
 v 60.0000 -60.0000 0.0000

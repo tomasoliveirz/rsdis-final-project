@@ -1,11 +1,10 @@
-"""Flight patterns and source estimation for the UAV. No ROS in here, so it can be tested with pytest."""
-import math
-
-import numpy as np
+"""Survey waypoints and a local search using measured values only."""
 
 
 def lawnmower(x_min, x_max, y_min, y_max, spacing):
     """Waypoints of a back-and-forth route along x, with lanes `spacing` apart in y."""
+    if spacing <= 0:
+        raise ValueError('lane spacing must be positive')
     route = []
     y, forward = y_min, True
     while y <= y_max + 1e-9:
@@ -14,6 +13,13 @@ def lawnmower(x_min, x_max, y_min, y_max, spacing):
         y += spacing
         forward = not forward
     return route
+
+
+def inside_bounds(x, y, bounds):
+    if bounds is None:
+        return True
+    xmin, xmax, ymin, ymax = bounds
+    return xmin <= x <= xmax and ymin <= y <= ymax
 
 
 class CompassSearch:
@@ -25,7 +31,12 @@ class CompassSearch:
     again. `target` is where to measure next and `add()` takes the value there.
     """
 
-    def __init__(self, x, y, step, min_step, max_probes=40):
+    def __init__(self, x, y, step, min_step, max_probes=40, bounds=None):
+        if step <= 0 or min_step <= 0 or max_probes < 1:
+            raise ValueError('search steps and probe budget must be positive')
+        self.bounds = bounds
+        if not inside_bounds(x, y, bounds):
+            raise ValueError('search starts outside the survey area')
         self.x, self.y = x, y
         self.best = None
         self.step = step
@@ -54,51 +65,36 @@ class CompassSearch:
         if not self._todo:
             self._next_ring()
 
+    def _choose_centre(self):
+        if not self._ring:
+            return
+        value, x, y = max(self._ring)
+        self._ring = []
+        if value > self.best:
+            self.best, self.x, self.y = value, x, y
+        else:
+            self.step /= 2
+
+    def _queue_neighbours(self):
+        step = self.step
+        points = [(self.x + step, self.y), (self.x - step, self.y),
+                  (self.x, self.y + step), (self.x, self.y - step)]
+        for x, y in points:
+            if not inside_bounds(x, y, self.bounds):
+                continue
+            known = self._measured.get((round(x, 3), round(y, 3)))
+            if known is None:
+                self._todo.append((x, y))
+            else:
+                self._ring.append((known, x, y))
+
     def _next_ring(self):
         while True:
-            if self._ring:
-                v, px, py = max(self._ring)
-                self._ring = []
-                if v > self.best:
-                    self.best, self.x, self.y = v, px, py
-                else:
-                    self.step /= 2
+            self._choose_centre()
             if self.step < self.min_step or self.probes_left < 4:
                 return
-            s = self.step
-            for p in [(self.x + s, self.y), (self.x - s, self.y),
-                      (self.x, self.y + s), (self.x, self.y - s)]:
-                known = self._measured.get((round(p[0], 3), round(p[1], 3)))
-                if known is None:
-                    self._todo.append(p)
-                else:
-                    self._ring.append((known, *p))
+            self._queue_neighbours()
             if self._todo:
                 return
-def grid(cx, cy, step):
-    """3 x 3 points around (cx, cy), in snake order so the UAV does not cross back."""
-    return [(cx + i * step, cy + j * step)
-            for i in (-1, 0, 1) for j in ((-1, 0, 1) if i != 0 else (1, 0, -1))]
-
-
-def estimate_source(samples, hazard_type, background):
-    """Position of the source from (x, y, value) readings, or None.
-
-    Both sensor models become a paraboloid in x and y after a transform:
-      gas (Gaussian):          ln(value - bg) = a + b x + c y + d (x^2 + y^2), d < 0
-      radiation (1/r^2 law):   1/(value - bg) = a + b x + c y + d (x^2 + y^2), d > 0
-    A least-squares fit gives a, b, c, d and the source is at (-b / 2d, -c / 2d).
-    """
-    rows, ys = [], []
-    for x, y, v in samples:
-        excess = v - background
-        if excess <= 1e-3:
-            continue
-        rows.append([1.0, x, y, x * x + y * y])
-        ys.append(math.log(excess) if hazard_type == 'gas' else 1.0 / excess)
-    if len(rows) < 4:
-        return None
-    a, b, c, d = np.linalg.lstsq(np.array(rows), np.array(ys), rcond=None)[0]
-    if (hazard_type == 'gas' and d >= 0) or (hazard_type == 'radiation' and d <= 0):
-        return None  # no peak in these readings
-    return -b / (2 * d), -c / (2 * d)
+            if not self._ring:
+                self.step /= 2

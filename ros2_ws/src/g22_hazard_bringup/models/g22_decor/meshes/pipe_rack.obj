@@ -1,5 +1,5 @@
 # pipe_rack, made by make_decor.py
-mtllib pipe_rack.mtl
+mtllib rusty_metal.mtl
 usemtl rusty_metal
 v -3.0000 -0.2000 -0.6000
 v 3.0000 -0.2000 -0.6000

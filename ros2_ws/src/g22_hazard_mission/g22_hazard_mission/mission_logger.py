@@ -11,8 +11,9 @@ import math
 import os
 import time
 
-import rclpy
 from rclpy.node import Node
+
+from g22_hazard_mission import run_node
 
 from g22_hazard_interfaces.msg import Detection
 from g22_hazard_mission import field
@@ -33,14 +34,12 @@ class MissionLogger(Node):
         self.csv = csv.writer(self.file)
         self.csv.writerow(['t_s', 'event', 'id', 'type', 'robot', 'x', 'y', 'value',
                            'confirmed', 'closest_source', 'error_m'])
-        self.found = set()
-        self.confirmed = set()
 
         self.create_subscription(Detection, '/hazards/detections',
                                  lambda m: self.log('estimate', m), 10)
         self.create_subscription(Detection, '/hazards/confirmations',
                                  lambda m: self.log('confirmation', m), 10)
-        self.create_timer(0.5, self.check_start)
+        self.start_timer = self.create_timer(0.5, self.check_start)
         self.get_logger().info(f'logging to {self.path}')
 
     def check_start(self):
@@ -48,6 +47,8 @@ class MissionLogger(Node):
         t = self.get_clock().now().nanoseconds * 1e-9
         if self.start is None and t > 0:
             self.start = t
+        if self.start is not None:
+            self.start_timer.cancel()
 
     def now(self):
         t = self.get_clock().now().nanoseconds * 1e-9
@@ -55,23 +56,28 @@ class MissionLogger(Node):
             self.start = t
         return t - self.start
 
-    def log(self, event, m):
-        same = [s for s in self.sources if s.type == m.hazard_type] or self.sources
-        closest = min(same, key=lambda s: math.hypot(s.x - m.position.x, s.y - m.position.y))
-        error = math.hypot(closest.x - m.position.x, closest.y - m.position.y)
-        t = self.now()
-        self.csv.writerow([f'{t:.1f}', event, m.id, m.hazard_type, m.robot,
-                           f'{m.position.x:.2f}', f'{m.position.y:.2f}', f'{m.value:.3f}',
-                           int(m.confirmed), closest.name, f'{error:.2f}'])
+    def reference_source(self, detection):
+        sources = [source for source in self.sources if source.type == detection.hazard_type]
+        return min(sources, key=lambda source: math.hypot(source.x - detection.position.x,
+                                                        source.y - detection.position.y), default=None)
+
+    @staticmethod
+    def event_row(event, detection, source, elapsed, error):
+        return [f'{elapsed:.1f}', event, detection.id, detection.hazard_type, detection.robot,
+                f'{detection.position.x:.2f}', f'{detection.position.y:.2f}', f'{detection.value:.3f}',
+                int(detection.confirmed), source.name, f'{error:.2f}']
+
+    def log(self, event, detection):
+        source = self.reference_source(detection)
+        if source is None:
+            self.get_logger().warn(f'no reference source for {detection.hazard_type}')
+            return
+        error = math.hypot(source.x - detection.position.x, source.y - detection.position.y)
+        elapsed = self.now()
+        self.csv.writerow(self.event_row(event, detection, source, elapsed, error))
         self.file.flush()
-        if event == 'estimate':
-            self.found.add(closest.name)
-        elif m.confirmed:
-            self.confirmed.add(closest.name)
         self.get_logger().info(
-            f'{event} #{m.id} -> {closest.name}, error {error:.2f} m, t = {t:.0f} s '
-            f'({len(self.found)}/{len(self.sources)} found, '
-            f'{len(self.confirmed)}/{len(self.sources)} confirmed)')
+            f'{event} #{detection.id}: nearest {source.name}, error {error:.2f} m, t = {elapsed:.0f} s')
 
     def destroy_node(self):
         self.file.close()
@@ -79,11 +85,4 @@ class MissionLogger(Node):
 
 
 def main():
-    rclpy.init()
-    node = MissionLogger()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.try_shutdown()
+    run_node(MissionLogger)

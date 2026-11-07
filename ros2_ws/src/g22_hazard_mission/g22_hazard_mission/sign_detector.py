@@ -10,7 +10,6 @@ from collections import deque
 from dataclasses import dataclass
 import math
 
-import rclpy
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile
 from rclpy.time import Time
@@ -18,6 +17,8 @@ from cv_bridge import CvBridge
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Image
 import cv2
+
+from g22_hazard_mission import run_node
 
 from g22_hazard_interfaces.msg import Sign
 from g22_hazard_mission.signs import GAS, RADIATION, find_signs, pixel_to_ground, rotate
@@ -58,28 +59,39 @@ class SignDetector(Node):
     def on_odom(self, msg):
         self.poses.append((Time.from_msg(msg.header.stamp), msg.pose.pose))
 
-    def on_image(self, msg):
+    def pose_at(self, stamp):
         if not self.poses:
+            return None
+        return min(self.poses, key=lambda item: abs((item[0] - stamp).nanoseconds))[1]
+
+    def camera_pose(self, pose):
+        position, orientation = pose.position, pose.orientation
+        quaternion = (orientation.w, orientation.x, orientation.y, orientation.z)
+        offset = rotate(quaternion, (0.0, 0.0, -self.camera_offset))
+        camera = (position.x + offset[0], position.y + offset[1], position.z + offset[2])
+        return camera, quaternion
+
+    @staticmethod
+    def annotate_sign(image, kind, u, v, size):
+        half = int(size / 2) + 4
+        corner = (int(u) - half, int(v) - half)
+        cv2.rectangle(image, corner, (int(u) + half, int(v) + half), COLOURS[kind], 3)
+        cv2.putText(image, NAMES[kind], (corner[0], corner[1] - 8),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, COLOURS[kind], 2)
+
+    def on_image(self, msg):
+        pose = self.pose_at(Time.from_msg(msg.header.stamp))
+        if pose is None:
             return
-        stamp = Time.from_msg(msg.header.stamp)
-        _, pose = min(self.poses, key=lambda tp: abs((tp[0] - stamp).nanoseconds))
-        img = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
-        p, o = pose.position, pose.orientation
-        q = (o.w, o.x, o.y, o.z)
-        offset = rotate(q, (0.0, 0.0, -self.camera_offset))
-        camera = (p.x + offset[0], p.y + offset[1], p.z + offset[2])
-        for kind, u, v, size in find_signs(img):
-            hit = pixel_to_ground(u, v, img.shape[1], img.shape[0], self.hfov, camera, q,
-                                  self.sign_height)
-            if hit is None:
-                continue
-            self.add(kind, *hit)
-            half = int(size / 2) + 4
-            corner = (int(u) - half, int(v) - half)
-            cv2.rectangle(img, corner, (int(u) + half, int(v) + half), COLOURS[kind], 3)
-            cv2.putText(img, NAMES[kind], (corner[0], corner[1] - 8),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, COLOURS[kind], 2)
-        out = self.bridge.cv2_to_imgmsg(img, 'bgr8')
+        image = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
+        camera, quaternion = self.camera_pose(pose)
+        for kind, u, v, size in find_signs(image):
+            hit = pixel_to_ground(u, v, image.shape[1], image.shape[0], self.hfov,
+                                  camera, quaternion, self.sign_height)
+            if hit is not None:
+                self.add(kind, *hit)
+                self.annotate_sign(image, kind, u, v, size)
+        out = self.bridge.cv2_to_imgmsg(image, 'bgr8')
         out.header = msg.header
         self.image_pub.publish(out)
 
@@ -110,11 +122,4 @@ class SignDetector(Node):
 
 
 def main():
-    rclpy.init()
-    node = SignDetector()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.try_shutdown()
+    run_node(SignDetector)

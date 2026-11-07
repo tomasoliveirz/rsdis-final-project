@@ -22,7 +22,6 @@ from PIL import Image, ImageDraw, ImageFilter
 RNG = np.random.default_rng(22)  # group 22, fixed seed so the output is the same every time
 
 
-# ----------------------------------------------------------------- noise ---
 
 def noise(h, w, beta=2.0):
     """Tileable fractal noise in [0, 1] (random phases filtered as 1/f^beta)."""
@@ -69,7 +68,6 @@ def streaks(h, w, count, length):
     return np.asarray(img) / 255.0
 
 
-# -------------------------------------------------------------- textures ---
 
 def tex_dirt(size=1024):
     """Packed dirt with darker damp patches and gravel. Tileable."""
@@ -90,6 +88,22 @@ def tex_dirt(size=1024):
     return np.asarray(img) / 255.0
 
 
+def crack_mask(size):
+    mask = Image.new('L', (size, size), 0)
+    draw = ImageDraw.Draw(mask)
+    for _ in range(6):
+        x, y = RNG.uniform(0, size), RNG.uniform(0, size)
+        angle = RNG.uniform(0, 2 * math.pi)
+        pts = [(x, y)]
+        for _ in range(25):  # a crack wanders slowly in one direction
+            angle += RNG.uniform(-0.6, 0.6)
+            x += 12 * math.cos(angle)
+            y += 12 * math.sin(angle)
+            pts.append((x, y))
+        draw.line(pts, fill=255, width=2)
+    return mask
+
+
 def tex_concrete(size=1024, cracks=False):
     """One 2.5 m concrete panel: stains, a joint on the edges and tie holes."""
     n = noise(size, size, 1.8)
@@ -107,19 +121,7 @@ def tex_concrete(size=1024, cracks=False):
             d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(70, 68, 64))
     out = np.asarray(img) / 255.0
     if cracks:
-        mask = Image.new('L', (size, size), 0)
-        dm = ImageDraw.Draw(mask)
-        for _ in range(6):
-            x, y = RNG.uniform(0, size), RNG.uniform(0, size)
-            angle = RNG.uniform(0, 2 * math.pi)
-            pts = [(x, y)]
-            for _ in range(25):  # a crack wanders slowly in one direction
-                angle += RNG.uniform(-0.6, 0.6)
-                x += 12 * math.cos(angle)
-                y += 12 * math.sin(angle)
-                pts.append((x, y))
-            dm.line(pts, fill=255, width=2)
-        m = np.asarray(mask.filter(ImageFilter.GaussianBlur(0.7))) / 255.0
+        m = np.asarray(crack_mask(size).filter(ImageFilter.GaussianBlur(0.7))) / 255.0
         out = out * (1 - 0.7 * m[..., None])
     return out
 
@@ -157,47 +159,6 @@ def tex_tank(w=1024, h=512):
     return rgb
 
 
-def trefoil(d, cx, cy, r, colour):
-    """Radiation symbol: three 60 degree blades (the centre dot is drawn by the caller)."""
-    for start in (-120, 0, 120):
-        d.pieslice([cx - r, cy - r, cx + r, cy + r], start - 30 - 90, start + 30 - 90, fill=colour)
-
-
-def tex_drum(kind, w=512, h=256):
-    """200 L steel drum. kind: radioactive (yellow), toxic (green), flammable (blue)."""
-    base = {'radioactive': (0.85, 0.68, 0.10),
-            'toxic': (0.22, 0.38, 0.18),
-            'flammable': (0.14, 0.26, 0.48)}[kind]
-    rgb = np.ones((h, w, 3)) * np.array(base)[None, None, :]
-    rgb *= (0.8 + 0.35 * noise(h, w, 1.3))[..., None]
-    for y in (0.03, 1 / 3, 2 / 3, 0.97):  # rolling hoops
-        rgb[int(y * h) - 5:int(y * h) + 5] *= 0.6
-    r = rust_mask(h, w, 0.15, bottom_bias=0.3)
-    rgb = rgb * (1 - r[..., None]) + np.array([0.38, 0.18, 0.08]) * r[..., None]
-    img = Image.fromarray((np.clip(rgb, 0, 1) * 255).astype(np.uint8))
-    d = ImageDraw.Draw(img)
-    for cx in (0.25 * w, 0.75 * w):  # one label on each side
-        cy = h / 2
-        if kind == 'radioactive':
-            d.ellipse([cx - 46, cy - 46, cx + 46, cy + 46], fill=(225, 180, 25))
-            trefoil(d, cx, cy, 42, (15, 15, 15))
-            d.ellipse([cx - 14, cy - 14, cx + 14, cy + 14], fill=(225, 180, 25))
-            d.ellipse([cx - 9, cy - 9, cx + 9, cy + 9], fill=(15, 15, 15))
-        else:
-            fill = (235, 120, 20) if kind == 'toxic' else (200, 30, 25)
-            s = 46
-            d.polygon([(cx, cy - s), (cx + s, cy), (cx, cy + s), (cx - s, cy)], fill=fill)
-            d.polygon([(cx, cy - s + 8), (cx + s - 8, cy), (cx, cy + s - 8), (cx - s + 8, cy)],
-                      outline=(20, 20, 20), width=3)
-            if kind == 'toxic':  # cross
-                d.line([(cx - 16, cy - 16), (cx + 16, cy + 16)], fill=(20, 20, 20), width=7)
-                d.line([(cx - 16, cy + 16), (cx + 16, cy - 16)], fill=(20, 20, 20), width=7)
-            else:  # flame-like drop
-                d.ellipse([cx - 12, cy - 4, cx + 12, cy + 20], fill=(20, 20, 20))
-                d.polygon([(cx - 11, cy + 6), (cx, cy - 22), (cx + 11, cy + 6)], fill=(20, 20, 20))
-    return np.asarray(img) / 255.0
-
-
 def tex_rusty_metal(size=512):
     """Old painted steel for the pipe rack."""
     rgb = mix((0.42, 0.40, 0.36), (0.30, 0.29, 0.27), noise(size, size, 1.2))
@@ -206,7 +167,6 @@ def tex_rusty_metal(size=512):
     return rgb * (1 - r[..., None]) + rust_col * r[..., None]
 
 
-# ---------------------------------------------------------------- meshes ---
 
 class Obj:
     """Minimal OBJ writer (positions, texture coordinates, normals, quads)."""
@@ -222,18 +182,15 @@ class Obj:
         n = len(self.vn)
         self.f.append([(base_v + i, base_t + i, n) for i in range(4)])
 
-    def write(self, path, material, texture):
+    def write(self, path, material):
         name = os.path.splitext(os.path.basename(path))[0]
         with open(path, 'w') as f:
-            f.write(f'# {name}, made by make_decor.py\nmtllib {name}.mtl\nusemtl {material}\n')
+            f.write(f'# {name}, made by make_decor.py\nmtllib {material}.mtl\nusemtl {material}\n')
             f.writelines(f'v {x:.4f} {y:.4f} {z:.4f}\n' for x, y, z in self.v)
             f.writelines(f'vt {u:.4f} {v:.4f}\n' for u, v in self.vt)
             f.writelines(f'vn {x:.4f} {y:.4f} {z:.4f}\n' for x, y, z in self.vn)
             for face in self.f:
                 f.write('f ' + ' '.join(f'{a}/{b}/{c}' for a, b, c in face) + '\n')
-        with open(os.path.join(os.path.dirname(path), name + '.mtl'), 'w') as f:
-            f.write(f'newmtl {material}\nKa 1 1 1\nKd 1 1 1\nKs 0.05 0.05 0.05\nNs 10\n'
-                    f'map_Kd {texture}\n')
 
 
 def box(sx, sy, sz, tile=None):
@@ -285,16 +242,9 @@ def ground(size, tile):
     return m
 
 
-# ------------------------------------------------------------------ main ---
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('out', help='model folder, e.g. ../models/g22_decor')
-    args = ap.parse_args()
-    mesh_dir = os.path.join(args.out, 'meshes')
-    os.makedirs(mesh_dir, exist_ok=True)
-
-    textures = {
+def decor_textures():
+    return {
         'dirt': tex_dirt(),
         'concrete': tex_concrete(),
         'broken_concrete': tex_concrete(512, cracks=True),
@@ -304,14 +254,11 @@ def main():
         'container_orange': tex_corrugated((0.70, 0.38, 0.12), rust=0.3),
         'shed': tex_corrugated((0.55, 0.57, 0.58), period=40, rust=0.2, frame=False),
         'tank': tex_tank(),
-        'drum_radioactive': tex_drum('radioactive'),
-        'drum_toxic': tex_drum('toxic'),
-        'drum_flammable': tex_drum('flammable'),
         'rusty_metal': tex_rusty_metal(),
     }
-    for name, rgb in textures.items():
-        save(rgb, os.path.join(mesh_dir, name + '.png'))
 
+
+def decor_meshes():
     # name: (mesh, texture). Sizes are the ones of hazard_zone.sdf.
     meshes = {
         'ground': (ground(120, 4), 'dirt'),
@@ -321,9 +268,6 @@ def main():
         'pipe_rack': (box(6, 0.4, 1.2, tile=(1.5, 1.2)), 'rusty_metal'),
         'tank_1': (cylinder(1.6, 5), 'tank'),
         'tank_2': (cylinder(1.2, 4), 'tank'),
-        'drum_radioactive': (cylinder(0.3, 0.9, 24), 'drum_radioactive'),
-        'drum_toxic': (cylinder(0.3, 0.9, 24), 'drum_toxic'),
-        'drum_flammable': (cylinder(0.3, 0.9, 24), 'drum_flammable'),
         'rubble_1': (box(1.2, 0.8, 0.6, tile=(1, 1)), 'broken_concrete'),
         'rubble_2': (box(0.8, 0.8, 0.5, tile=(1, 1)), 'broken_concrete'),
         'rubble_3': (box(1.5, 0.6, 0.4, tile=(1, 1)), 'broken_concrete'),
@@ -333,9 +277,38 @@ def main():
     }
     for colour in ('red', 'blue', 'green', 'orange'):
         meshes['container_' + colour] = (box(6.1, 2.4, 2.6), 'container_' + colour)
-    for name, (mesh, tex) in meshes.items():
-        mesh.write(os.path.join(mesh_dir, name + '.obj'), tex, tex + '.png')
+    return meshes
 
+
+def write_materials(mesh_dir, meshes):
+    materials = {texture for _, texture in meshes.values()}
+    for name in sorted(materials):
+        with open(os.path.join(mesh_dir, name + '.mtl'), 'w') as file:
+            file.write(f'newmtl {name}\nKa 1 1 1\nKd 1 1 1\nKs 0.05 0.05 0.05\nNs 10\n'
+                       f'map_Kd {name}.png\n')
+
+
+def write_textures(mesh_dir, textures):
+    for name, rgb in textures.items():
+        save(rgb, os.path.join(mesh_dir, name + '.png'))
+
+
+def write_meshes(mesh_dir, meshes):
+    for name, (mesh, material) in meshes.items():
+        mesh.write(os.path.join(mesh_dir, name + '.obj'), material)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('out', help='model folder, e.g. ../models/g22_decor')
+    args = parser.parse_args()
+    mesh_dir = os.path.join(args.out, 'meshes')
+    os.makedirs(mesh_dir, exist_ok=True)
+    textures = decor_textures()
+    meshes = decor_meshes()
+    write_textures(mesh_dir, textures)
+    write_materials(mesh_dir, meshes)
+    write_meshes(mesh_dir, meshes)
     print(f'{len(textures)} textures and {len(meshes)} meshes in {mesh_dir}')
 
 

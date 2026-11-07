@@ -1,5 +1,5 @@
 # tank_1, made by make_decor.py
-mtllib tank_1.mtl
+mtllib tank.mtl
 usemtl tank
 v 1.6000 0.0000 -2.5000
 v 1.5803 0.2503 -2.5000

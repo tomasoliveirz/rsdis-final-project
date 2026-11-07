@@ -4,11 +4,12 @@ Publishes on `reading` the values at the robot's position. The UAV takes its
 position from odometry (pose_source:=odom), the ground robots from AMCL
 (pose_source:=tf).
 """
-import rclpy
 from rclpy.node import Node
 from rclpy.time import Time
 from nav_msgs.msg import Odometry
 from tf2_ros import Buffer, TransformListener, TransformException
+
+from g22_hazard_mission import run_node
 
 from g22_hazard_interfaces.msg import SensorReading
 from g22_hazard_mission import field
@@ -67,11 +68,4 @@ class HazardSensor(Node):
 
 
 def main():
-    rclpy.init()
-    node = HazardSensor()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    node.destroy_node()
-    rclpy.try_shutdown()
+    run_node(HazardSensor)

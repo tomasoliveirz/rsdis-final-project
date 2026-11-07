@@ -18,3 +18,11 @@ report/*.synctex.gz
 
 # editor
 .vscode/
+
+# local reviews and test runs
+/docs/review-*.md
+/docs/review-*-run.csv
+/docs/cleanup-*-run.csv
+
+# test caches
+.pytest_cache/

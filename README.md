@@ -50,6 +50,32 @@ The map in `maps/` is generated from the world with `scripts/make_map.py`.
 The decor (`models/g22_decor/`) is generated with `scripts/make_decor.py`.
 The labelled barrels (`models/barrel/`) are generated with `scripts/make_barrels.py`.
 
+## How the mission works
+
+The UAV follows a lawnmower route. A gas or radiation reading over a configured
+alarm threshold starts a local search: measure the centre and its neighbours,
+move towards higher averaged readings, then reduce the step until the search
+finishes. Only sensor readings and robot positions drive this search. The UAV
+does not know the field formula, background values or source positions.
+The alarm thresholds are operational settings, not the simulated background.
+
+The coordinator sends the nearest free UGV whose Nav2 server is available,
+using straight-line distance. Previous tasks do not affect this choice. Failed
+navigation or missing ground measurements leave the candidate unconfirmed and
+try the other robot. A ground check needs a successful arrival and at least
+three fresh readings at the goal.
+
+Candidates and ground checks use `Detection` on `/hazards/detections` and
+`/hazards/confirmations`. Camera signs use `Sign` on `/signs`; they are displayed
+in RViz but do not yet change the UAV route. The old duplicate `Hazard` message
+and `/hazards/candidates` topic have been removed. When upgrading an older
+workspace, rebuild the interfaces in clean build/install directories to avoid
+stale generated message bindings.
+
+The local search finds a measured peak, not an exact fitted source position.
+Noise, broad peaks and nearby sources limit its precision. The CSV logger reads
+the reference sources only to record errors; it does not guide either robot.
+
 ## Packages
 
 - `g22_hazard_bringup`: world, robot models, map, Nav2 config and the simulation launch

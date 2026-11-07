@@ -1,5 +1,5 @@
 # wall_ew, made by make_decor.py
-mtllib wall_ew.mtl
+mtllib concrete.mtl
 usemtl concrete
 v -0.2000 -12.0000 -1.2500
 v 0.2000 -12.0000 -1.2500

@@ -1,5 +1,5 @@
 # wall_ns, made by make_decor.py
-mtllib wall_ns.mtl
+mtllib concrete.mtl
 usemtl concrete
 v -15.2000 -0.2000 -1.2500
 v 15.2000 -0.2000 -1.2500

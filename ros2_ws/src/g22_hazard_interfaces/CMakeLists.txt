@@ -7,7 +7,6 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/Hazard.msg"
   "msg/SensorReading.msg"
   "msg/Sign.msg"
   "msg/Detection.msg"

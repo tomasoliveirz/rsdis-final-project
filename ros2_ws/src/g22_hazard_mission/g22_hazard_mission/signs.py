@@ -32,33 +32,33 @@ def _inside(contour, shape):
     return mask > 0
 
 
+def matches_symbol(kind, contour, mask, hsv):
+    saturation, brightness = hsv[..., 1], hsv[..., 2]
+    inside = _inside(contour, hsv.shape)
+    coloured = inside & (mask > 0)
+    reference = np.median(brightness[coloured])
+    area = inside.sum()
+    dark_part = (inside & (brightness < DARK * reference)).sum() / area
+    if kind == RADIATION:
+        return 0.15 < dark_part < 0.6
+    light = inside & ~coloured & (saturation < GREY_S) & (brightness > LIGHT * reference)
+    return light.sum() / area > 0.3 and 0.02 < dark_part < 0.4
+
+
 def find_signs(bgr, min_area=300):
     """List of (type, u, v, size) in pixels, one per sign seen."""
     hsv = cv2.cvtColor(cv2.GaussianBlur(bgr, (3, 3), 0), cv2.COLOR_BGR2HSV)
-    s, v = hsv[..., 1], hsv[..., 2]
     yellow = cv2.inRange(hsv, *YELLOW)
     red = cv2.inRange(hsv, *RED[0]) | cv2.inRange(hsv, *RED[1])
-
     found = []
     for kind, mask in ((RADIATION, yellow), (GAS, red)):
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        for c in contours:
-            if cv2.contourArea(c) < min_area:
+        for contour in contours:
+            if cv2.contourArea(contour) < min_area or not matches_symbol(kind, contour, mask, hsv):
                 continue
-            x, y, w, h = cv2.boundingRect(c)
-            inside = _inside(c, bgr.shape)
-            coloured = inside & (mask > 0)
-            ref = np.median(v[coloured])
-            n = inside.sum()
-            dark_part = (inside & (v < DARK * ref)).sum() / n
-            if kind == RADIATION:
-                ok = 0.15 < dark_part < 0.6
-            else:
-                light = inside & ~coloured & (s < GREY_S) & (v > LIGHT * ref)
-                ok = light.sum() / n > 0.3 and 0.02 < dark_part < 0.4
-            if ok:
-                found.append((kind, x + w / 2, y + h / 2, max(w, h)))
+            x, y, width, height = cv2.boundingRect(contour)
+            found.append((kind, x + width / 2, y + height / 2, max(width, height)))
     return found
 
 

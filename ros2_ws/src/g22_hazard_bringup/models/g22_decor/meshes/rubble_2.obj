@@ -1,5 +1,5 @@
 # rubble_2, made by make_decor.py
-mtllib rubble_2.mtl
+mtllib broken_concrete.mtl
 usemtl broken_concrete
 v -0.4000 -0.4000 -0.2500
 v 0.4000 -0.4000 -0.2500
