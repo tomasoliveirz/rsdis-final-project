@@ -1,6 +1,5 @@
-"""Sensors on the three robots, the UAV mission, sign detection, the hazard map and RViz.
-Run after sim.launch.py.
-"""
+"""Sensors on the three robots, the UAV mission, the coordinator, the metrics logger,
+sign detection, the hazard map and RViz. Run after sim.launch.py (or use all.launch.py)."""
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -18,7 +17,7 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration('use_rviz')
 
     # name, where the position comes from, readings per second
-    robots = [('uav1', 'odom', 5.0), ('ugv1', 'tf', 2.0), ('ugv2', 'tf', 2.0)]
+    robots = [('uav1', 'odom', 10.0), ('ugv1', 'tf', 2.0), ('ugv2', 'tf', 2.0)]
 
     sensors = [
         Node(
@@ -55,6 +54,20 @@ def generate_launch_description():
         output='screen',
     )
 
+    coordinator = Node(
+        package='g22_hazard_mission',
+        executable='coordinator',
+        parameters=[{'robots': ['ugv1', 'ugv2'], 'use_sim_time': True}],
+        output='screen',
+    )
+
+    logger = Node(
+        package='g22_hazard_mission',
+        executable='mission_logger',
+        parameters=[{'hazards_file': hazards_file, 'use_sim_time': True}],
+        output='screen',
+    )
+
     viz = Node(
         package='g22_hazard_mission',
         executable='hazard_viz',
@@ -87,6 +100,8 @@ def generate_launch_description():
         *sensors,
         uav,
         signs,
+        coordinator,
+        logger,
         viz,
         rviz,
     ])

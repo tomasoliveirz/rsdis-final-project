@@ -296,22 +296,13 @@
                 </geometry>
                 </collision>
                 <visual name="visual">
-                <geometry>
-                    <plane>
-                    <normal>0 0 1</normal>
-                    <size>100 100</size>
-                    </plane>
-                </geometry>
-                <material>
-                    <ambient>0.4 0.37 0.32 1</ambient>
-                    <diffuse>0.4 0.37 0.32 1</diffuse>
-                    <specular>0.1 0.1 0.1 1</specular>
-                </material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/ground.obj</uri></mesh></geometry>
                 </visual>
             </link>
         </model>
 
-        <!-- Industrial yard. Only boxes and cylinders so make_map.py can read it -->
+        <!-- Industrial yard. Collisions are only boxes and cylinders so make_map.py can
+             read them. The visuals are the meshes of models/g22_decor (same sizes). -->
         <model name="industrial_yard">
             <static>true</static>
             <link name="wall_north">
@@ -320,8 +311,7 @@
                     <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
-                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/wall_ns.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_south">
@@ -330,8 +320,7 @@
                     <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
-                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/wall_ns.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_east">
@@ -340,8 +329,7 @@
                     <geometry><box><size>0.4 24 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>0.4 24 2.5</size></box></geometry>
-                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/wall_ew.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_west">
@@ -350,8 +338,7 @@
                     <geometry><box><size>0.4 24 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>0.4 24 2.5</size></box></geometry>
-                    <material><ambient>0.36 0.34 0.31 1</ambient><diffuse>0.36 0.34 0.31 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/wall_ew.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="warehouse">
@@ -360,8 +347,7 @@
                     <geometry><box><size>8 5 5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>8 5 5</size></box></geometry>
-                    <material><ambient>0.47 0.45 0.41 1</ambient><diffuse>0.47 0.45 0.41 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/warehouse.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="pipe_rack">
@@ -370,8 +356,7 @@
                     <geometry><box><size>6 0.4 1.2</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>6 0.4 1.2</size></box></geometry>
-                    <material><ambient>0.38 0.22 0.14 1</ambient><diffuse>0.38 0.22 0.14 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/pipe_rack.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="container_1">
@@ -380,8 +365,7 @@
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.55 0.3 0.16 1</ambient><diffuse>0.55 0.3 0.16 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/container_red.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="container_2">
@@ -390,8 +374,7 @@
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.24 0.34 0.34 1</ambient><diffuse>0.24 0.34 0.34 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/container_blue.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="container_3">
@@ -400,8 +383,7 @@
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.42 0.16 0.12 1</ambient><diffuse>0.42 0.16 0.12 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/container_orange.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="container_4">
@@ -410,8 +392,7 @@
                     <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>6.1 2.4 2.6</size></box></geometry>
-                    <material><ambient>0.32 0.34 0.22 1</ambient><diffuse>0.32 0.34 0.22 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/container_green.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="tank_1">
@@ -420,8 +401,7 @@
                     <geometry><cylinder><radius>1.6</radius><length>5</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>1.6</radius><length>5</length></cylinder></geometry>
-                    <material><ambient>0.52 0.5 0.45 1</ambient><diffuse>0.52 0.5 0.45 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/tank_1.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="tank_2">
@@ -430,8 +410,7 @@
                     <geometry><cylinder><radius>1.2</radius><length>4</length></cylinder></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><cylinder><radius>1.2</radius><length>4</length></cylinder></geometry>
-                    <material><ambient>0.46 0.45 0.4 1</ambient><diffuse>0.46 0.45 0.4 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/tank_2.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="barrier_1">
@@ -440,8 +419,8 @@
                     <geometry><box><size>3 0.6 0.8</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>3 0.6 0.8</size></box></geometry>
-                    <material><ambient>0.58 0.56 0.52 1</ambient><diffuse>0.58 0.56 0.52 1</diffuse></material>
+                    <pose>0 0 -0.4 0 0 0</pose>
+                    <geometry><mesh><uri>model://jersey_barrier/meshes/jersey_barrier.dae</uri><scale>0.74 0.74 0.7</scale></mesh></geometry>
                 </visual>
             </link>
             <link name="barrier_2">
@@ -450,8 +429,8 @@
                     <geometry><box><size>3 0.6 0.8</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>3 0.6 0.8</size></box></geometry>
-                    <material><ambient>0.58 0.56 0.52 1</ambient><diffuse>0.58 0.56 0.52 1</diffuse></material>
+                    <pose>0 0 -0.4 0 0 0</pose>
+                    <geometry><mesh><uri>model://jersey_barrier/meshes/jersey_barrier.dae</uri><scale>0.74 0.74 0.7</scale></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_1">
@@ -460,8 +439,15 @@
                     <geometry><box><size>1.2 0.8 0.6</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>1.2 0.8 0.6</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_1.obj</uri></mesh></geometry>
+                </visual>
+                <visual name="block_0">
+                    <pose>-0.2 0.05 0.30 0 0 0.4</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="block_1">
+                    <pose>0.2 -0.1 0.30 0 0 1.9</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_2">
@@ -470,8 +456,7 @@
                     <geometry><box><size>0.8 0.8 0.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>0.8 0.8 0.5</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_2.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_3">
@@ -480,8 +465,7 @@
                     <geometry><box><size>1.5 0.6 0.4</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>1.5 0.6 0.4</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_3.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_4">
@@ -490,8 +474,15 @@
                     <geometry><box><size>1 1 0.7</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>1 1 0.7</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_4.obj</uri></mesh></geometry>
+                </visual>
+                <visual name="block_0">
+                    <pose>-0.2 0.05 0.35 0 0 0.4</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="block_1">
+                    <pose>0.2 -0.1 0.35 0 0 1.9</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_5">
@@ -500,8 +491,7 @@
                     <geometry><box><size>1.2 0.5 0.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>1.2 0.5 0.5</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_5.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="rubble_6">
@@ -510,8 +500,15 @@
                     <geometry><box><size>0.9 0.7 0.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>0.9 0.7 0.5</size></box></geometry>
-                    <material><ambient>0.3 0.28 0.25 1</ambient><diffuse>0.3 0.28 0.25 1</diffuse></material>
+                    <geometry><mesh><uri>model://g22_decor/meshes/rubble_6.obj</uri></mesh></geometry>
+                </visual>
+                <visual name="block_0">
+                    <pose>-0.2 0.05 0.25 0 0 0.4</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="block_1">
+                    <pose>0.2 -0.1 0.25 0 0 1.9</pose>
+                    <geometry><mesh><uri>model://cinder_block/meshes/cinder_block.dae</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="car_1">
@@ -520,8 +517,8 @@
                     <geometry><box><size>4 1.8 0.8</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
-                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                    <pose>0 0 -0.7 0.04 0 1.5708</pose>
+                    <geometry><mesh><uri>model://pickup/meshes/pickup.dae</uri><scale>0.74 0.74 0.74</scale></mesh></geometry>
                 </visual>
             </link>
             <link name="car_1_cabin">
@@ -529,10 +526,6 @@
                 <collision name="collision">
                     <geometry><box><size>2 1.6 0.5</size></box></geometry>
                 </collision>
-                <visual name="visual">
-                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
-                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
-                </visual>
             </link>
             <link name="car_2">
                 <pose>-7 1.5 0.4 0 0 0.15</pose>
@@ -540,8 +533,8 @@
                     <geometry><box><size>4 1.8 0.8</size></box></geometry>
                 </collision>
                 <visual name="visual">
-                    <geometry><box><size>4 1.8 0.8</size></box></geometry>
-                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
+                    <pose>0 0 -0.7 -0.05 0.03 1.5708</pose>
+                    <geometry><mesh><uri>model://pickup/meshes/pickup.dae</uri><scale>0.74 0.74 0.74</scale></mesh></geometry>
                 </visual>
             </link>
             <link name="car_2_cabin">
@@ -549,10 +542,6 @@
                 <collision name="collision">
                     <geometry><box><size>2 1.6 0.5</size></box></geometry>
                 </collision>
-                <visual name="visual">
-                    <geometry><box><size>2 1.6 0.5</size></box></geometry>
-                    <material><ambient>0.2 0.19 0.18 1</ambient><diffuse>0.2 0.19 0.18 1</diffuse></material>
-                </visual>
             </link>
             <link name="barrel_1">
                 <pose>-2.2 -0.6 0.45 0 0 0</pose>
@@ -763,6 +752,196 @@
                     <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
                     <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/empty_diamond_lid.png</albedo_map></metal></pbr></material>
                 </visual>
+            </link>
+
+            <!-- Props with real meshes. Simple collisions so make_map.py can read them -->
+            <link name="dumpster">
+                <pose>-14.05 2.5 0.71 0 0 1.5708</pose>
+                <collision name="collision">
+                    <geometry><box><size>2.0 1.22 1.42</size></box></geometry>
+                </collision>
+                <visual name="visual">
+                    <pose>0 0 -0.71 0 0 0</pose>
+                    <geometry><mesh><uri>model://dumpster/meshes/dumpster.dae</uri><scale>1.2 1.2 1.2</scale></mesh></geometry>
+                    <material><ambient>0.2 0.3 0.2 1</ambient><diffuse>0.2 0.3 0.2 1</diffuse></material>
+                </visual>
+            </link>
+            <link name="pallets_1">
+                <pose>-14.0 10.6 0.55 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><box><size>0.8 1.2 1.1</size></box></geometry>
+                </collision>
+                <visual name="pallet_0">
+                    <pose>0 0 -0.428 0 0 0</pose>
+                    <geometry><mesh><uri>model://euro_pallet/meshes/pallet.dae</uri><scale>0.1 0.1 0.1</scale></mesh></geometry>
+                    <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material>
+                </visual>
+                <visual name="pallet_1">
+                    <pose>0 0 -0.284 0 0 0</pose>
+                    <geometry><mesh><uri>model://euro_pallet/meshes/pallet.dae</uri><scale>0.1 0.1 0.1</scale></mesh></geometry>
+                    <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material>
+                </visual>
+                <visual name="box_0">
+                    <pose>-0.20 -0.40 -0.262 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_1">
+                    <pose>-0.20 0.00 -0.262 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_2">
+                    <pose>-0.20 0.40 -0.262 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_3">
+                    <pose>0.20 -0.40 -0.262 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_4">
+                    <pose>0.20 0.00 -0.262 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_5">
+                    <pose>0.20 0.40 -0.262 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_6">
+                    <pose>0.00 -0.40 0.138 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_7">
+                    <pose>0.00 0.00 0.138 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_8">
+                    <pose>0.00 0.40 0.138 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+            </link>
+            <link name="pallets_2">
+                <pose>-12.8 10.6 0.55 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><box><size>0.8 1.2 1.1</size></box></geometry>
+                </collision>
+                <visual name="pallet_0">
+                    <pose>0 0 -0.428 0 0 0</pose>
+                    <geometry><mesh><uri>model://euro_pallet/meshes/pallet.dae</uri><scale>0.1 0.1 0.1</scale></mesh></geometry>
+                    <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material>
+                </visual>
+                <visual name="pallet_1">
+                    <pose>0 0 -0.284 0 0 0</pose>
+                    <geometry><mesh><uri>model://euro_pallet/meshes/pallet.dae</uri><scale>0.1 0.1 0.1</scale></mesh></geometry>
+                    <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material>
+                </visual>
+                <visual name="box_0">
+                    <pose>-0.20 -0.40 -0.262 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_1">
+                    <pose>-0.20 0.00 -0.262 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_2">
+                    <pose>-0.20 0.40 -0.262 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_3">
+                    <pose>0.20 -0.40 -0.262 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_4">
+                    <pose>0.20 0.00 -0.262 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_5">
+                    <pose>0.20 0.40 -0.262 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_6">
+                    <pose>0.00 -0.40 0.138 0 0 0.0</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_7">
+                    <pose>0.00 0.00 0.138 0 0 0.1</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+                <visual name="box_8">
+                    <pose>0.00 0.40 0.138 0 0 0.2</pose>
+                    <geometry><mesh><uri>model://cardboard_box/meshes/cardboard_box.dae</uri></mesh></geometry>
+                </visual>
+            </link>
+            <link name="cone_1">
+                <pose>-2.85 -4 0.33 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.15</radius><length>0.66</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <pose>0 0 -0.33 0 0 0</pose>
+                    <geometry><mesh><uri>model://construction_cone/meshes/construction_cone.dae</uri><scale>6 6 6</scale></mesh></geometry>
+                </visual>
+            </link>
+            <link name="cone_2">
+                <pose>0.85 -4 0.33 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.15</radius><length>0.66</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <pose>0 0 -0.33 0 0 0</pose>
+                    <geometry><mesh><uri>model://construction_cone/meshes/construction_cone.dae</uri><scale>6 6 6</scale></mesh></geometry>
+                </visual>
+            </link>
+            <link name="hydrant">
+                <pose>-14.4 -5.5 0.47 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.2</radius><length>0.93</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <pose>0 0 -0.47 0 0 0</pose>
+                    <geometry><mesh><uri>model://fire_hydrant/meshes/fire_hydrant.dae</uri></mesh></geometry>
+                </visual>
+            </link>
+        </model>
+
+        <!-- Backdrop outside the walls (visual only, out of the lidar range) -->
+        <model name="backdrop">
+            <static>true</static>
+            <link name="link">
+            <visual name="cooling_tower">
+                <pose>10 40 0 0 0 0</pose>
+                <geometry><mesh><uri>model://reactor/meshes/reactor.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="water_tower">
+                <pose>-27 18 0 0 0 0.3</pose>
+                <geometry><mesh><uri>model://water_tower/meshes/water_tower.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="collapsed_factory">
+                <pose>-40 -6 0 0 0 1.2</pose>
+                <geometry><mesh><uri>model://collapsed_industrial/meshes/collapsed_industrial.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_0">
+                <pose>18 -9 0 0 0 1.5708</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_1">
+                <pose>18 1 0 0 0 1.5708</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_2">
+                <pose>18 11 0 0 0 1.5708</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_3">
+                <pose>6 16 0 0 0 0</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_4">
+                <pose>-6 16 0 0 0 0</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
+            <visual name="pole_5">
+                <pose>-18 16 0 0 0 0</pose>
+                <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
+            </visual>
             </link>
         </model>
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<!-- Not spawned on its own: the world uses the meshes in meshes/ directly. -->
+<sdf version="1.8">
+    <model name="g22_decor">
+        <static>true</static>
+        <link name="link"/>
+    </model>
+</sdf>
