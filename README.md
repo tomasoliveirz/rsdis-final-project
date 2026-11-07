@@ -1,7 +1,7 @@
 # RSDIS Final Project - Group 22
 
 Multi-robot simulation with ROS 2 and Gazebo for RSDIS (ISEP, 2026/27): one UAV and two
-ground robots in an industrial area with gas and radiation sources.
+ground robots in a 36 × 28 m industrial yard with three gas leaks and two radiation sources.
 
 Uses ROS 2 Jazzy, Gazebo Harmonic and Nav2. The ground robots are a small version of the
 Gazebo tutorial robot and the UAV is the X3 quadcopter.

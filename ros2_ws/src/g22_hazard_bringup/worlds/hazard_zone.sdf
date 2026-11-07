@@ -306,36 +306,36 @@
         <model name="industrial_yard">
             <static>true</static>
             <link name="wall_north">
-                <pose>0 12 1.25 0 0 0</pose>
+                <pose>0 14 1.25 0 0 0</pose>
                 <collision name="collision">
-                    <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
+                    <geometry><box><size>36.4 0.4 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><mesh><uri>model://g22_decor/meshes/wall_ns.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_south">
-                <pose>0 -12 1.25 0 0 0</pose>
+                <pose>0 -14 1.25 0 0 0</pose>
                 <collision name="collision">
-                    <geometry><box><size>30.4 0.4 2.5</size></box></geometry>
+                    <geometry><box><size>36.4 0.4 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><mesh><uri>model://g22_decor/meshes/wall_ns.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_east">
-                <pose>15 0 1.25 0 0 0</pose>
+                <pose>18 0 1.25 0 0 0</pose>
                 <collision name="collision">
-                    <geometry><box><size>0.4 24 2.5</size></box></geometry>
+                    <geometry><box><size>0.4 28 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><mesh><uri>model://g22_decor/meshes/wall_ew.obj</uri></mesh></geometry>
                 </visual>
             </link>
             <link name="wall_west">
-                <pose>-15 0 1.25 0 0 0</pose>
+                <pose>-18 0 1.25 0 0 0</pose>
                 <collision name="collision">
-                    <geometry><box><size>0.4 24 2.5</size></box></geometry>
+                    <geometry><box><size>0.4 28 2.5</size></box></geometry>
                 </collision>
                 <visual name="visual">
                     <geometry><mesh><uri>model://g22_decor/meshes/wall_ew.obj</uri></mesh></geometry>
@@ -754,6 +754,97 @@
                 </visual>
             </link>
 
+            <link name="barrel_15">
+                <pose>-14.4 7 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_16">
+                <pose>-13.7 7.4 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_17">
+                <pose>-14.2 7.8 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/gas_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_18">
+                <pose>1.8 11.7 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_19">
+                <pose>2.5 11.4 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+            <link name="barrel_20">
+                <pose>2.1 12.1 0.45 0 0 0</pose>
+                <collision name="collision">
+                    <geometry><cylinder><radius>0.3</radius><length>0.9</length></cylinder></geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry><mesh><uri>model://barrel/barrel_side.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_side.png</albedo_map></metal></pbr></material>
+                </visual>
+                <visual name="lid">
+                    <pose>0 0 0.451 0 0 0</pose>
+                    <geometry><mesh><uri>model://barrel/barrel_lid.obj</uri></mesh></geometry>
+                    <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><pbr><metal><albedo_map>model://barrel/radiation_lid.png</albedo_map></metal></pbr></material>
+                </visual>
+            </link>
+
             <!-- Props with real meshes. Simple collisions so make_map.py can read them -->
             <link name="dumpster">
                 <pose>-14.05 2.5 0.71 0 0 1.5708</pose>
@@ -919,15 +1010,15 @@
                 <geometry><mesh><uri>model://collapsed_industrial/meshes/collapsed_industrial.dae</uri></mesh></geometry>
             </visual>
             <visual name="pole_0">
-                <pose>18 -9 0 0 0 1.5708</pose>
+                <pose>21 -9 0 0 0 1.5708</pose>
                 <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
             </visual>
             <visual name="pole_1">
-                <pose>18 1 0 0 0 1.5708</pose>
+                <pose>21 1 0 0 0 1.5708</pose>
                 <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
             </visual>
             <visual name="pole_2">
-                <pose>18 11 0 0 0 1.5708</pose>
+                <pose>21 11 0 0 0 1.5708</pose>
                 <geometry><mesh><uri>model://telephone_pole/meshes/telephone_pole.dae</uri></mesh></geometry>
             </visual>
             <visual name="pole_3">

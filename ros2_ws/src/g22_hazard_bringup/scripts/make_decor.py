@@ -262,8 +262,8 @@ def decor_meshes():
     # name: (mesh, texture). Sizes are the ones of hazard_zone.sdf.
     meshes = {
         'ground': (ground(120, 4), 'dirt'),
-        'wall_ns': (box(30.4, 0.4, 2.5, tile=(2.5, 2.5)), 'concrete'),
-        'wall_ew': (box(0.4, 24, 2.5, tile=(2.5, 2.5)), 'concrete'),
+        'wall_ns': (box(36.4, 0.4, 2.5, tile=(2.5, 2.5)), 'concrete'),
+        'wall_ew': (box(0.4, 28, 2.5, tile=(2.5, 2.5)), 'concrete'),
         'warehouse': (box(8, 5, 5, tile=(4, 5)), 'shed'),
         'pipe_rack': (box(6, 0.4, 1.2, tile=(1.5, 1.2)), 'rusty_metal'),
         'tank_1': (cylinder(1.6, 5), 'tank'),

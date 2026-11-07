@@ -3,7 +3,8 @@
 ## Idea
 
 An industrial / post-apocalyptic area in Gazebo with zones contaminated by gas and
-radiation, explored by one UAV and two ground robots.
+radiation, explored by one UAV and two ground robots. The yard is 36 × 28 m, with
+three gas leaks and two radiation sources.
 
 The UAV flies a waypoint route over the area taking readings. When it measures something
 abnormal it does a short search (at most nine probes or 25 s) and sends the

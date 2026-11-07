@@ -25,3 +25,15 @@ sources:
     x: 12.5
     y: 5.5
     strength: 40.0
+
+  - name: gas_leak_3
+    type: gas
+    x: -14.0
+    y: 7.0
+    strength: 45.0
+
+  - name: radiation_2
+    type: radiation
+    x: 1.0
+    y: 11.5
+    strength: 20.0

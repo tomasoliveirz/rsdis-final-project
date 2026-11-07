@@ -31,7 +31,7 @@ class UavSurvey(Node):
         self.altitude = self.declare_parameter('altitude', 6.0).value
         self.max_speed = self.declare_parameter('max_speed', 3.0).value
         self.tolerance = self.declare_parameter('tolerance', 0.4).value
-        self.area = self.declare_parameter('area', [-13.0, 13.0, -10.0, 10.0]).value
+        self.area = self.declare_parameter('area', [-16.0, 16.0, -12.0, 12.0]).value
         spacing = self.declare_parameter('lane_spacing', 6.0).value
         self.triggers = {
             'gas': self.declare_parameter('gas_trigger_ppm', 8.0).value,

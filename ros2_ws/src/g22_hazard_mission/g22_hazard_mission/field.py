@@ -24,7 +24,7 @@ class Source:
     type: str       # 'gas' or 'radiation'
     x: float
     y: float
-    strength: float  # gas: peak ppm at the leak, radiation: uSv/h at 1 m
+    strength: float  # peak source contribution: gas in ppm, radiation in uSv/h
     spread: float = 2.5  # gas only, metres
     height: float = 6.0  # gas only, metres
 

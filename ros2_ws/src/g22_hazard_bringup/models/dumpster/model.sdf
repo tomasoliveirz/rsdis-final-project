@@ -17,13 +17,6 @@
             <uri>model://dumpster/meshes/dumpster.dae</uri>
           </mesh>
         </geometry>
-        <material>
-          <script>
-            <uri>model://dumpster/materials/scripts</uri>
-            <uri>model://dumpster/materials/textures</uri>
-            <name>Dumpster/Diffuse</name>
-          </script>
-        </material>
       </visual>
     </link>
   </model>
