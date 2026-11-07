@@ -1,7 +1,8 @@
 """Hazard map for RViz.
 
-The area is split into cells coloured by the worst reading seen in them (green,
-yellow or red). It also shows each robot with its last reading, the sources
+Ground cells show the highest ground reading seen there (blue, yellow or red).
+A low reading means only that: it does not certify a cell as safe. UAV readings
+are shown on the robot label and do not classify the ground. It also shows each robot with its last reading, the sources
 estimated by the UAV (orange), their ground checks (red if confirmed, grey if
 not), the signs seen by the camera and the real sources when show_truth is true.
 """
@@ -18,7 +19,7 @@ from g22_hazard_mission import run_node
 from g22_hazard_interfaces.msg import Detection, SensorReading, Sign
 from g22_hazard_mission import field
 
-SAFE = ColorRGBA(r=0.1, g=0.8, b=0.2, a=0.35)
+LOW = ColorRGBA(r=0.2, g=0.6, b=0.9, a=0.35)
 CAUTION = ColorRGBA(r=1.0, g=0.8, b=0.0, a=0.5)
 DANGER = ColorRGBA(r=0.9, g=0.1, b=0.1, a=0.6)
 GAS = ColorRGBA(r=0.5, g=0.9, b=0.1, a=0.8)
@@ -44,7 +45,7 @@ class HazardViz(Node):
         show_truth = self.declare_parameter('show_truth', False).value
 
         self.truth = field.load(hazards_file).sources if show_truth and hazards_file else []
-        self.cells = {}   # (i, j) -> worst level (0 safe, 1 caution, 2 danger)
+        self.cells = {}   # (i, j) -> highest ground level (0 low, 1 caution, 2 danger)
         self.robots = {}  # name -> last SensorReading
         self.signs = {}
         self.estimates = {}      # id -> Detection from the UAV
@@ -69,8 +70,9 @@ class HazardViz(Node):
         return 0
 
     def on_reading(self, msg):
-        key = (math.floor(msg.position.x / self.cell), math.floor(msg.position.y / self.cell))
-        self.cells[key] = max(self.cells.get(key, 0), self.level(msg))
+        if msg.robot != 'uav1':
+            key = (math.floor(msg.position.x / self.cell), math.floor(msg.position.y / self.cell))
+            self.cells[key] = max(self.cells.get(key, 0), self.level(msg))
         self.robots[msg.robot] = msg
 
     def on_sign(self, msg):
@@ -104,7 +106,7 @@ class HazardViz(Node):
         zones.scale.z = 0.02
         for (i, j), level in self.cells.items():
             zones.points.append(Point(x=(i + 0.5) * self.cell, y=(j + 0.5) * self.cell, z=0.01))
-            zones.colors.append((SAFE, CAUTION, DANGER)[level])
+            zones.colors.append((LOW, CAUTION, DANGER)[level])
         return [zones] if zones.points else []
 
     def robot_markers(self):

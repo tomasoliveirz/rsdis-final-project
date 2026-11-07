@@ -68,3 +68,7 @@ def test_pitch_is_taken_into_account():
     pitch = (math.cos(a / 2), 0.0, math.sin(a / 2), 0.0)
     x, y = pixel_to_ground(W / 2, H / 2, W, H, FOV, (0.0, 0.0, 5.0), pitch, 0.0)
     assert x == pytest.approx(-5.0 * math.tan(a)) and y == pytest.approx(0.0, abs=1e-9)
+
+
+def test_camera_below_the_sign_plane_does_not_project_behind_itself():
+    assert pixel_to_ground(W / 2, H / 2, W, H, FOV, (0.0, 0.0, 0.5), LEVEL, 0.9) is None

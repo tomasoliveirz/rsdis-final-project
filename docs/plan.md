@@ -6,8 +6,8 @@ An industrial / post-apocalyptic area in Gazebo with zones contaminated by gas a
 radiation, explored by one UAV and two ground robots.
 
 The UAV flies a waypoint route over the area taking readings. When it measures something
-abnormal it does a small search around that point to get a better estimate of where the
-source is, and sends that position to a coordinator. The coordinator picks the closest available
+abnormal it does a short search (at most nine probes or 25 s) and sends the
+strongest measured position to a coordinator. The coordinator picks the closest available
 ground robot, which drives there with Nav2, takes a measurement on the ground and
 confirms the hazard.
 
@@ -15,7 +15,16 @@ Some barrels have a gas or radiation sign on them. A sign only means there might
 leak, so the UAV camera picks up the signs with OpenCV and the UAV checks the readings
 around each one.
 
-At the end RViz shows the safe and dangerous zones and the detections.
+RViz shows the detections and the ground readings. Low, elevated and high
+readings are distinguished; unvisited ground is unassessed, rather than safe.
+
+## Scope of the proposal
+
+The proposal asks for a Gazebo scenario, ROS control/perception modules,
+information sharing and complementary robot tasks, plus the report and demo.
+The two-UAV team, SLAM/map merging, frontier exploration and auction allocation
+are example approaches in the slides. Our scenario uses one UAV, two UGVs,
+a known navigation map and nearest-available assignment.
 
 ## What we reuse
 
@@ -39,10 +48,10 @@ At the end RViz shows the safe and dangerous zones and the detections.
 - [x] gas and radiation sensors
 - [x] UAV route and local search using sensor readings only
 - [x] signs on the barrels and OpenCV sign detection
-- [ ] use camera signs to request a sensor inspection
+- [x] use camera signs to request a sensor inspection; a sign alone does not confirm a leak
 - [x] nearest available UGV, with no penalty for previous tasks
 - [x] reassign failed ground checks without publishing false confirmations
-- [x] RViz markers (zones, robots, estimates and confirmations)
+- [x] RViz markers (ground readings, robots, estimates and confirmations)
 - [x] whole mission from one launch file (`all.launch.py`)
 - [x] metrics logger (CSV per run in `~/g22_runs`)
 - [ ] repeat complete Gazebo trials and compare accuracy and mission time

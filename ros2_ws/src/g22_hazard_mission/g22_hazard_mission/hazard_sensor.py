@@ -1,8 +1,8 @@
 """Simulated gas/radiation sensor, one per robot (runs in the robot namespace).
 
-Publishes on `reading` the values at the robot's position. The UAV takes its
-position from odometry (pose_source:=odom), the ground robots from AMCL
-(pose_source:=tf).
+The simulated field is sampled at the actual Gazebo position. The position sent
+with the reading is the robot's navigation estimate (odometry for the UAV,
+AMCL for the UGVs). Localisation error must not change what a sensor measures.
 """
 from rclpy.node import Node
 from rclpy.time import Time
@@ -29,9 +29,9 @@ class HazardSensor(Node):
         self.field = field.load(hazards_file)
         self.position = None
 
-        if self.pose_source == 'odom':
-            self.create_subscription(Odometry, 'odom', self.on_odom, 10)
-        else:
+        topic = 'odom' if self.pose_source == 'odom' else 'ground_truth'
+        self.create_subscription(Odometry, topic, self.on_odom, 10)
+        if self.pose_source != 'odom':
             self.tf_buffer = Buffer()
             self.tf_listener = TransformListener(self.tf_buffer, self)
 
@@ -54,9 +54,10 @@ class HazardSensor(Node):
 
     def tick(self):
         p = self.lookup_position()
-        if p is None:
+        if p is None or self.position is None:
             return
-        gas, rad = self.field.measure(p.x, p.y, p.z)
+        actual = self.position
+        gas, rad = self.field.measure(actual.x, actual.y, actual.z)
         msg = SensorReading()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = self.map_frame

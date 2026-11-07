@@ -85,4 +85,6 @@ def pixel_to_ground(u, v, width, height, hfov, camera, q, ground_z):
     if ray[2] >= 0:
         return None
     t = (ground_z - camera[2]) / ray[2]
+    if t <= 0:
+        return None
     return camera[0] + t * ray[0], camera[1] + t * ray[1]

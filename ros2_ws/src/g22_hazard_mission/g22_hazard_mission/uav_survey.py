@@ -1,19 +1,22 @@
-"""Survey the yard, follow high sensor readings, report candidates and return home.
+"""Survey, inspect camera signs or sensor alarms, hand candidates to the UGVs.
 
-The local search compares averaged readings at neighbouring positions. It does
-not use the simulated field model, source positions or background values.
-The X3 takes body-frame velocity commands; odometry gives its world pose.
+A sign requests five readings at its position. An alarm without a sign requests
+at most nine local probes. Each inspection has a 25 s limit. Neither path reads
+the simulated field model, source positions or background values.
 """
 import math
 
+from rclpy.duration import Duration
 from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, QoSProfile
+from rclpy.time import Time
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Bool
 
 from g22_hazard_mission import run_node
 
-from g22_hazard_interfaces.msg import Detection, SensorReading
+from g22_hazard_interfaces.msg import Detection, SensorReading, Sign
 from g22_hazard_mission.search import CompassSearch, inside_bounds, lawnmower
 
 
@@ -35,11 +38,11 @@ class UavSurvey(Node):
             'radiation': self.declare_parameter('radiation_trigger_usvh', 0.4).value,
         }
         self.search_step = self.declare_parameter('search_step', 2.0).value
-        self.search_min_step = self.declare_parameter('search_min_step', 0.5).value
-        self.n_samples = self.declare_parameter('samples_per_probe', 10).value
+        self.inspection_timeout = self.declare_parameter('inspection_timeout', 25.0).value
+        self.n_samples = self.declare_parameter('samples_per_probe', 5).value
         self.min_separation = self.declare_parameter('min_separation', 6.0).value
-        if self.n_samples < 1 or any(value <= 0 for value in self.triggers.values()):
-            raise ValueError('sample count and alarm thresholds must be positive')
+        if self.n_samples < 1 or self.inspection_timeout <= 0 or any(value <= 0 for value in self.triggers.values()):
+            raise ValueError('sample count, inspection timeout and alarm thresholds must be positive')
 
         self.route = lawnmower(*self.area, spacing)
         self.waypoint = 0
@@ -49,11 +52,19 @@ class UavSurvey(Node):
         self.found = []
         self.searched = []
         self.search = None
-        self.search_type = None
+        self.pending_signs = []
+        self.seen_signs = set()
+        self.hazard_type = None
+        self.target = None
+        self.measure_started = None
+        self.inspection_until = None
+        self.peak = None
         self.samples = None
 
         self.create_subscription(Odometry, 'odom', self.on_odom, 10)
         self.create_subscription(SensorReading, 'reading', self.on_reading, 10)
+        latched = QoSProfile(depth=10, durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        self.create_subscription(Sign, '/signs', self.on_sign, latched)
         self.cmd_pub = self.create_publisher(Twist, 'cmd_vel', 10)
         self.enable_pub = self.create_publisher(Bool, 'enable', 10)
         self.detection_pub = self.create_publisher(Detection, '/hazards/detections', 10)
@@ -72,12 +83,38 @@ class UavSurvey(Node):
         return any(k == kind and math.hypot(x - px, y - py) < self.min_separation
                    for k, px, py in positions)
 
+    def on_sign(self, msg):
+        if msg.id in self.seen_signs or msg.type not in (Sign.GAS, Sign.RADIATION):
+            return
+        if not all(math.isfinite(v) for v in (msg.position.x, msg.position.y)):
+            return
+        self.seen_signs.add(msg.id)
+        self.pending_signs.append(msg)
+        if self.state == 'inspect' and self.search is not None:
+            sign = self.next_sign(self.hazard_type)
+            if sign is not None:
+                self.inspect_sign(sign)
+
+    def next_sign(self, kind=None):
+        self.pending_signs = [s for s in self.pending_signs
+                              if not self.near_known_position(
+                                  'gas' if s.type == Sign.GAS else 'radiation',
+                                  s.position.x, s.position.y, self.found)]
+        matching = [s for s in self.pending_signs
+                    if kind is None or s.type == (Sign.GAS if kind == 'gas' else Sign.RADIATION)]
+        if not matching or self.pose is None:
+            return None
+        p = self.pose.position
+        sign = min(matching, key=lambda s: math.hypot(s.position.x - p.x, s.position.y - p.y))
+        self.pending_signs.remove(sign)
+        return sign
+
     def on_reading(self, msg):
-        if self.state == 'survey':
+        if self.state == 'survey' and not self.pending_signs:
             kind = self.select_alarm(msg)
             if kind is not None:
-                self.start_search(kind, msg.position)
-        elif self.state == 'search':
+                self.start_inspection(kind, msg.position.x, msg.position.y)
+        elif self.state == 'inspect':
             self.collect_sample(msg)
 
     def select_alarm(self, msg):
@@ -90,37 +127,67 @@ class UavSurvey(Node):
                  and not self.near_known_position(kind, p.x, p.y, known)]
         return max(kinds, key=lambda k: self.value(msg, k) / self.triggers[k], default=None)
 
-    def start_search(self, kind, position):
-        x, y = position.x, position.y
-        self.search = CompassSearch(x, y, self.search_step, self.search_min_step, bounds=self.area)
-        self.searched.append((kind, x, y))
-        self.search_type = kind
-        self.samples = None
-        self.state = 'search'
-        self.get_logger().info(f'{kind} alarm at ({x:.1f}, {y:.1f}), searching')
+    def inspect_sign(self, sign):
+        kind = 'gas' if sign.type == Sign.GAS else 'radiation'
+        xmin, xmax, ymin, ymax = self.area
+        x = min(xmax, max(xmin, sign.position.x))
+        y = min(ymax, max(ymin, sign.position.y))
+        self.start_inspection(kind, x, y, camera=True)
+
+    def start_inspection(self, kind, x, y, camera=False):
+        self.search = None if camera else CompassSearch(x, y, self.search_step, bounds=self.area)
+        if not camera:
+            self.searched.append((kind, x, y))
+        self.target, self.hazard_type = (x, y), kind
+        self.samples = self.measure_started = None
+        self.peak = None
+        self.inspection_until = self.get_clock().now() + Duration(seconds=self.inspection_timeout)
+        self.state = 'inspect'
+        source = 'camera sign: measure here' if camera else 'sensor alarm: at most nine probes'
+        self.get_logger().info(f'{kind} at ({x:.1f}, {y:.1f}): {source}, limit {self.inspection_timeout:.0f} s')
 
     def collect_sample(self, msg):
-        if self.samples is None or not self.at_position(msg.position, *self.search.target, self.altitude):
+        if self.samples is None or not self.at_position(msg.position, *self.target, self.altitude):
             return
-        value = self.value(msg, self.search_type)
+        if Time.from_msg(msg.header.stamp).nanoseconds < self.measure_started.nanoseconds:
+            return
+        value = self.value(msg, self.hazard_type)
         if math.isfinite(value):
             self.samples.append(value)
 
-    def search_tick(self):
-        if self.fly_to(*self.search.target, self.altitude) and self.samples is None:
+    def inspection_tick(self):
+        if self.get_clock().now() >= self.inspection_until:
+            self.finish_inspection('time limit')
+            return
+        if self.fly_to(*self.target, self.altitude) and self.samples is None:
             self.samples = []
+            self.measure_started = self.get_clock().now()
         if self.samples is None or len(self.samples) < self.n_samples:
             return
-        self.search.add(sum(self.samples) / len(self.samples))
-        self.samples = None
+        value = sum(self.samples) / len(self.samples)
+        if self.peak is None or value > self.peak[0]:
+            self.peak = (value, *self.target)
+        if self.search is None:
+            self.finish_inspection('camera position measured')
+            return
+        self.search.add(value)
         if self.search.done:
-            self.finish_search()
+            self.finish_inspection('local probes complete')
+        else:
+            self.target = self.search.target
+            self.samples = self.measure_started = None
 
-    def finish_search(self):
-        kind, search = self.search_type, self.search
-        if search.best >= self.triggers[kind] and not self.near_known_position(
-                kind, search.x, search.y, self.found):
-            self.report(kind, search.x, search.y, search.best)
+    def finish_inspection(self, reason):
+        kind = self.hazard_type
+        if self.peak is not None:
+            value, x, y = self.peak
+            if value >= self.triggers[kind] and not self.near_known_position(kind, x, y, self.found):
+                self.report(kind, x, y, value)
+            else:
+                self.get_logger().info(f'{kind}: inspection ended below alarm or near a known candidate')
+        else:
+            self.get_logger().warn(f'{kind}: inspection ended without fresh measurements')
+        self.get_logger().info(f'inspection finished: {reason}; resuming survey')
         self.state = 'survey'
 
     def candidate_message(self, kind, x, y, value):
@@ -138,7 +205,7 @@ class UavSurvey(Node):
         msg = self.candidate_message(kind, x, y, value)
         self.detection_pub.publish(msg)
         self.found.append((kind, x, y))
-        self.get_logger().info(f'#{msg.id} {kind}: measured peak {value:.2f} at ({x:.2f}, {y:.2f})')
+        self.get_logger().info(f'#{msg.id} {kind}: measured candidate {value:.2f} at ({x:.2f}, {y:.2f})')
 
     def at_position(self, position, x, y, z):
         return (math.hypot(x - position.x, y - position.y) < self.tolerance
@@ -166,7 +233,7 @@ class UavSurvey(Node):
         if self.pose is None or self.state == 'done':
             return
         actions = {'takeoff': self.take_off, 'survey': self.follow_route,
-                   'search': self.search_tick, 'return': self.return_home, 'land': self.land}
+                   'inspect': self.inspection_tick, 'return': self.return_home, 'land': self.land}
         action = actions.get(self.state)
         if action is not None:
             action()
@@ -178,6 +245,10 @@ class UavSurvey(Node):
             self.state = 'survey'
 
     def follow_route(self):
+        sign = self.next_sign()
+        if sign is not None:
+            self.inspect_sign(sign)
+            return
         if self.fly_to(*self.route[self.waypoint], self.altitude):
             self.waypoint += 1
             if self.waypoint == len(self.route):

@@ -162,6 +162,14 @@
             <child>caster</child>
         </joint>
 
+        <!-- Actual pose is used only inside the simulated hazard sensor. -->
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+            <dimensions>3</dimensions>
+            <odom_frame>map</odom_frame>
+            <odom_topic>$(arg namespace)/ground_truth</odom_topic>
+            <odom_publish_frequency>10</odom_publish_frequency>
+        </plugin>
+
         <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>

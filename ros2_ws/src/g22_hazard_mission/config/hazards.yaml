@@ -1,5 +1,5 @@
-# Where the hazards really are. Only the simulated sensors (and show_truth)
-# read this, the robots have to find them. Positions in the map frame.
+# Hidden sources for the simulated sensors, evaluation logger and optional
+# truth markers. Decision nodes do not read this. Positions in the map frame.
 
 background:
   gas_ppm: 0.5

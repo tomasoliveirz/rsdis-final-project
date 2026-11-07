@@ -23,28 +23,22 @@ def inside_bounds(x, y, bounds):
 
 
 class CompassSearch:
-    """Finds the strongest reading around a start point.
+    """Measure the centre and four neighbours, at most twice (nine probes).
 
-    Measure the centre, then the 4 points `step` away. Move to the best one if
-    it beats the centre, otherwise halve the step. Stop when the step is below
-    `min_step` or the probes run out. Points already measured are not visited
-    again. `target` is where to measure next and `add()` takes the value there.
+    Keep the strongest measured point. Stop after a round without improvement.
+    There is no field model, fitting, step refinement or cache of old readings.
     """
 
-    def __init__(self, x, y, step, min_step, max_probes=40, bounds=None):
-        if step <= 0 or min_step <= 0 or max_probes < 1:
-            raise ValueError('search steps and probe budget must be positive')
-        self.bounds = bounds
+    def __init__(self, x, y, step=2.0, rounds=2, bounds=None):
+        if step <= 0 or rounds < 1:
+            raise ValueError('search step and round count must be positive')
         if not inside_bounds(x, y, bounds):
             raise ValueError('search starts outside the survey area')
         self.x, self.y = x, y
+        self.step, self.rounds, self.bounds = step, rounds, bounds
         self.best = None
-        self.step = step
-        self.min_step = min_step
-        self.probes_left = max_probes
         self._todo = [(x, y)]
-        self._ring = []
-        self._measured = {}
+        self._round = []
 
     @property
     def done(self):
@@ -55,46 +49,18 @@ class CompassSearch:
         return self._todo[0]
 
     def add(self, value):
-        px, py = self._todo.pop(0)
-        self.probes_left -= 1
-        self._measured[(round(px, 3), round(py, 3))] = value
-        if self.best is None:
-            self.best = value
-        else:
-            self._ring.append((value, px, py))
-        if not self._todo:
-            self._next_ring()
-
-    def _choose_centre(self):
-        if not self._ring:
+        x, y = self._todo.pop(0)
+        self._round.append((value, x, y))
+        if self._todo:
             return
-        value, x, y = max(self._ring)
-        self._ring = []
-        if value > self.best:
-            self.best, self.x, self.y = value, x, y
-        else:
-            self.step /= 2
-
-    def _queue_neighbours(self):
-        step = self.step
-        points = [(self.x + step, self.y), (self.x - step, self.y),
-                  (self.x, self.y + step), (self.x, self.y - step)]
-        for x, y in points:
-            if not inside_bounds(x, y, self.bounds):
-                continue
-            known = self._measured.get((round(x, 3), round(y, 3)))
-            if known is None:
-                self._todo.append((x, y))
-            else:
-                self._ring.append((known, x, y))
-
-    def _next_ring(self):
-        while True:
-            self._choose_centre()
-            if self.step < self.min_step or self.probes_left < 4:
+        value, x, y = max(self._round)
+        self._round = []
+        if self.best is not None:
+            self.rounds -= 1
+            if value <= self.best:
                 return
-            self._queue_neighbours()
-            if self._todo:
-                return
-            if not self._ring:
-                self.step /= 2
+        self.best, self.x, self.y = value, x, y
+        if self.rounds:
+            s = self.step
+            self._todo = [(x + s, y), (x, y + s), (x - s, y), (x, y - s)]
+            self._todo = [p for p in self._todo if inside_bounds(*p, self.bounds)]
