@@ -18,7 +18,8 @@ def generate_launch_description():
 
     sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(bringup, 'launch', 'sim.launch.py')),
-        launch_arguments={'headless': LaunchConfiguration('headless')}.items(),
+        launch_arguments={'headless': LaunchConfiguration('headless'),
+                          'video_camera': LaunchConfiguration('video_camera')}.items(),
     )
     nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(mission, 'launch', 'mission.launch.py')),
@@ -30,6 +31,8 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument('headless', default_value='False'),
+        DeclareLaunchArgument('video_camera', default_value='false',
+                              description='Front camera on each UGV, for the demo video only'),
         DeclareLaunchArgument('show_truth', default_value='false'),
         DeclareLaunchArgument('use_rviz', default_value='true'),
         DeclareLaunchArgument('mission_delay', default_value='25.0',

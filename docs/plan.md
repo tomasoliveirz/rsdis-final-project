@@ -4,7 +4,7 @@
 
 An industrial / post-apocalyptic area in Gazebo with zones contaminated by gas and
 radiation, explored by one UAV and two ground robots. The yard is 36 × 28 m, with
-three gas leaks and two radiation sources.
+four gas leaks (one with no matching gas warning sign nearby) and two radiation sources.
 
 The UAV flies a waypoint route over the area taking readings. When it measures something
 abnormal it does a short search (at most nine probes or 25 s) and sends the
@@ -55,8 +55,8 @@ a known navigation map and nearest-available assignment.
 - [x] RViz markers (ground readings, robots, estimates and confirmations)
 - [x] whole mission from one launch file (`all.launch.py`)
 - [x] metrics logger (CSV per run in `~/g22_runs`)
-- [ ] repeat complete Gazebo trials and compare accuracy and mission time
-- [ ] video
-- [ ] report
+- [x] repeat complete Gazebo trials and compare accuracy and mission time
+- [x] video
+- [x] report
 
 Deadline: 8 November 2026 (report of up to 6 pages, ROS packages and video).

@@ -52,6 +52,8 @@ def launch_arguments(pkg_dir):
         description='Shared Nav2 parameters for the ground robots'))
     arguments.append(DeclareLaunchArgument('autostart', default_value='true',
                                           description='Automatically startup the stacks'))
+    arguments.append(DeclareLaunchArgument('video_camera', default_value='false',
+                                          description='Front camera on each UGV, for the demo video only'))
     return arguments
 
 
@@ -80,7 +82,8 @@ def spawn_robot(robot, pkg_dir):
     return Node(
         package='ros_gz_sim', executable='create', output='screen',
         arguments=['-name', name,
-                   '-string', Command([FindExecutable(name='xacro'), ' ', xacro, ' namespace:=', name]),
+                   '-string', Command([FindExecutable(name='xacro'), ' ', xacro, ' namespace:=', name,
+                                       ' video_camera:=', LaunchConfiguration('video_camera')]),
                    '-x', str(robot['x_pose']), '-y', str(robot['y_pose']),
                    '-z', '0.01', '-Y', str(robot['yaw'])])
 

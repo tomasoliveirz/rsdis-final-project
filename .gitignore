@@ -26,3 +26,12 @@ report/*.synctex.gz
 
 # test caches
 .pytest_cache/
+
+# Keep only the final demonstration video in Git.
+/video/*
+!/video/edit/
+/video/edit/*
+!/video/edit/G22_hazard_mission_1x.mp4
+
+# Local presentation study material.
+/Caderno-de-Estudo/

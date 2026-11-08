@@ -1,7 +1,8 @@
 # RSDIS Final Project - Group 22
 
 Multi-robot simulation with ROS 2 and Gazebo for RSDIS (ISEP, 2026/27): one UAV and two
-ground robots in a 36 × 28 m industrial yard with three gas leaks and two radiation sources.
+ground robots in a 36 × 28 m industrial yard with four gas leaks and two radiation sources.
+One leak has no matching gas warning sign nearby, and one radiation-labelled barrel has no source.
 
 Uses ROS 2 Jazzy, Gazebo Harmonic and Nav2. The ground robots are a small version of the
 Gazebo tutorial robot and the UAV is the X3 quadcopter.
@@ -45,6 +46,15 @@ ros2 launch g22_hazard_mission all.launch.py headless:=True show_truth:=true
 
 Each run writes a CSV in `~/g22_runs/` with the estimates, the confirmations, their
 time and their distance to the real sources.
+
+## Final deliverables
+
+- [English IEEE report](report/main.pdf), with its [LaTeX source](report/main.tex), references and figures in `report/`.
+- [Mission demonstration video](video/edit/G22_hazard_mission_1x.mp4), Full HD, 5 min 19 s. The full mission plays continuously at 1× simulation time, with the overview, map and robot points of view.
+
+Optional front cameras on the UGVs (`video_camera:=true`) were used for recording;
+the mission does not use them. Raw recordings, editing projects, generated graphics
+and temporary review files are excluded from Git.
 
 The map in `maps/` is generated from the world with `scripts/make_map.py`.
 The decor (`models/g22_decor/`) is generated with `scripts/make_decor.py`.

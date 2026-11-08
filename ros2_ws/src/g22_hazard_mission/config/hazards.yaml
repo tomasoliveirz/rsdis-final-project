@@ -37,3 +37,10 @@ sources:
     x: 1.0
     y: 11.5
     strength: 20.0
+
+  # No matching gas warning sign nearby: gas readings identify this leak.
+  - name: gas_leak_4
+    type: gas
+    x: 3.5
+    y: -9.2
+    strength: 40.0
