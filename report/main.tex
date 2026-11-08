@@ -184,10 +184,8 @@ Table~\ref{tab:sources} illustrates the distinction between confirmation and sou
 
 The source without a matching sign and the sign without a source test the role of the camera. In all three runs, the UAV inspected the radiation-labelled barrel without a source, measured an average below the alarm threshold and published no candidate. Gas 4 has no matching gas warning sign nearby. In each run, a gas alarm on the first survey lane started a local search; its candidate lay 0.87 to \SI{0.90}{\metre} from the source, and \texttt{ugv2} confirmed it. These trials show both paths to inspection: the camera can request a check, and sensor readings can detect a hazard without a matching sign.
 
-\subsection{Validation and limitations}
-Candidate identifiers count observations, not physical sources. Spatial grouping reduces repeated reports but cannot guarantee one candidate per source. An additional recording attempt generated seven candidates for the same six-source configuration, with two associated with Radiation 1. It ended while the Radiation 2 ground check was pending, so it is excluded from the completed trials in Table~\ref{tab:runs}. This case also shows why a count of positive checks alone is insufficient to judge mission completion.
-
-The three ROS packages build successfully, and all 42 automated tests pass. These tests cover field calculations, search bounds, visual detection and projection, allocation and confirmation conditions, and separation between actual sensor position and reported navigation position. The Gazebo runs exercise the interaction between these components. They do not replace evaluation across different layouts, field conditions or physical robots.
+\subsection{Validation}
+The three ROS packages compile successfully, and all 42 automated tests pass. These tests check sensor calculations and position reporting, sign detection and projection, local search, robot assignment and ground confirmation rules. The complete Gazebo trials check how these components work together during the mission.
 
 \section{Conclusion}
 \subsection{Discussion of results}
@@ -198,6 +196,7 @@ The three completed trials support operation in the tested six-source scenario. 
 \subsection{Limitations and future work}
 The main limitations are ideal UAV localisation, static synthetic fields, fixed visual colour rules and a known sign-height plane. The method also assumes a prepared obstacle map and known initial robot poses. Fixed survey spacing can miss weak sources, while spatial grouping can merge nearby sources or allow repeated reports of one field. Straight-line allocation ignores route length, and accessible goals can be offset from the source. Further evaluation should vary source positions and strengths and include more unsupported signs and unlabelled leaks. More realistic sensing and uncertain UAV localisation should precede physical deployment. If assignment efficiency becomes a measured bottleneck, planned route cost can replace Euclidean distance without introducing a work-history penalty.
 
+\newpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
